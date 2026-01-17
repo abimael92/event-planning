@@ -250,44 +250,34 @@
         }
     },
     "vendorDashboard": {
-        "welcome": "Bienvenido de vuelta,",
-        "thisMonth": "este mes",
-        "subtitle": "Aquí está el rendimiento de tu negocio y los próximos eventos a simple vista",
+        "welcome": "Bienvenido de nuevo, {name}",
+        "overview": "Aquí tienes un resumen de tus reservas y rendimiento",
         "stats": {
             "activeBookings": "Reservas Activas",
             "totalRevenue": "Ingresos Totales",
-            "upcomingEvents": "Próximos Eventos",
-            "satisfactionRate": "Tasa de Satisfacción",
-            "trends": {
-                "week": "esta semana",
-                "month": "este mes",
-                "pending": "pendientes",
-                "improvement": "desde el mes pasado"
-            },
-            "descriptions": {
-                "currentlyServing": "Actualmente sirviendo",
-                "yearToDate": "Año a la fecha",
-                "next30Days": "Próximos 30 días",
-                "customerRating": "Calificación de clientes"
-            }
+            "upcomingEvents": "Eventos Próximos",
+            "satisfactionRate": "Tasa de Satisfacción"
         },
+        "recentActivity": "Actividad Reciente",
         "activities": {
-            "booking": {
-                "title": "Gala Corporativa 2024",
-                "description": "Nueva reserva confirmada"
-            },
-            "payment": {
-                "title": "Fiesta de 15 de Emma",
-                "description": "Pago recibido exitosamente"
-            },
-            "message": {
-                "title": "Planora Events",
-                "description": "Nueva consulta sobre paquete de boda"
-            },
-            "review": {
-                "title": "Conferencia Tecnológica 2024",
-                "description": "Nueva reseña de 5 estrellas recibida"
-            }
+            "bookingConfirmed": "Reserva Confirmada",
+            "corporateGala": "Gala Corporativa 2024",
+            "paymentReceived": "Pago Recibido",
+            "paymentFrom": "${amount} de {event}",
+            "emmaSweet16": "Fiesta de 15 de Emma",
+            "newMessage": "Nuevo Mensaje",
+            "fromPlanora": "De Planora Events"
+        },
+        "time": {
+            "hoursAgo": "hace {count} {count, plural, one {hora} other {horas}}",
+            "daysAgo": "hace {count} {count, plural, one {día} other {días}}"
+        },
+        "quickActions": "Acciones Rápidas",
+        "performanceSummary": "Resumen de Rendimiento",
+        "metrics": {
+            "monthlyTarget": "Objetivo Mensual",
+            "avgResponseTime": "Tiempo Medio de Respuesta",
+            "responseTimeValue": "{hours}h"
         },
         "timeAgo": {
             "hours": "horas atrás",

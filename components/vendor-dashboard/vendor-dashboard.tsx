@@ -5,9 +5,11 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Calendar, DollarSign, Users, TrendingUp, CheckCircle, Mail, FileText, Clock, Target } from "lucide-react"
+import { useTranslation } from "@/hooks/use-translation"
 
 export function VendorDashboard() {
     const [vendorName] = useState("Elite Catering Co.")
+    const { t } = useTranslation()
 
     const stats = {
         activeBookings: 5,
@@ -21,20 +23,44 @@ export function VendorDashboard() {
             {/* Header */}
             <div>
                 <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">
-                    Welcome back, {vendorName}
+                    {t('vendorDashboard.welcome')}
                 </h1>
                 <p className="text-muted-foreground mt-2 text-sm sm:text-base">
-                    Here's an overview of your bookings and performance
+                    {t('vendorDashboard.overview')}
                 </p>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { title: "Active Bookings", value: stats.activeBookings, icon: Calendar, color: "text-primary", bgColor: "bg-primary/10" },
-                    { title: "Total Revenue", value: `$${stats.totalRevenue.toLocaleString()}`, icon: DollarSign, color: "text-secondary", bgColor: "bg-secondary/10" },
-                    { title: "Upcoming Events", value: stats.upcomingEvents, icon: Users, color: "text-accent", bgColor: "bg-accent/10" },
-                    { title: "Satisfaction Rate", value: `${stats.satisfactionRate}%`, icon: TrendingUp, color: "text-green-600", bgColor: "bg-green-100" },
+                    {
+                        title: t('vendorDashboard.stats.activeBookings'),
+                        value: stats.activeBookings,
+                        icon: Calendar,
+                        color: "text-primary",
+                        bgColor: "bg-primary/10"
+                    },
+                    {
+                        title: t('vendorDashboard.stats.totalRevenue'),
+                        value: `$${stats.totalRevenue.toLocaleString()}`,
+                        icon: DollarSign,
+                        color: "text-secondary",
+                        bgColor: "bg-secondary/10"
+                    },
+                    {
+                        title: t('vendorDashboard.stats.upcomingEvents'),
+                        value: stats.upcomingEvents,
+                        icon: Users,
+                        color: "text-accent",
+                        bgColor: "bg-accent/10"
+                    },
+                    {
+                        title: t('vendorDashboard.stats.satisfactionRate'),
+                        value: `${stats.satisfactionRate}%`,
+                        icon: TrendingUp,
+                        color: "text-green-600",
+                        bgColor: "bg-green-100"
+                    },
                 ].map((stat, index) => (
                     <Card key={index} className="p-4 sm:p-5 overflow-hidden">
                         <div className="flex items-center justify-between">
@@ -59,7 +85,9 @@ export function VendorDashboard() {
                 {/* Recent Activity */}
                 <Card className="lg:col-span-2">
                     <CardHeader>
-                        <CardTitle className="text-lg sm:text-xl">Recent Activity</CardTitle>
+                        <CardTitle className="text-lg sm:text-xl">
+                            {t('vendorDashboard.recentActivity')}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <motion.div
@@ -70,25 +98,25 @@ export function VendorDashboard() {
                             {[
                                 {
                                     icon: CheckCircle,
-                                    title: "Booking Confirmed",
-                                    description: "Corporate Gala 2024",
-                                    time: "2 hours ago",
+                                    title: t('vendorDashboard.activities.bookingConfirmed'),
+                                    description: t('vendorDashboard.activities.corporateGala'),
+                                    time: t('vendorDashboard.time.hoursAgo'),
                                     color: "text-green-600",
                                     bgColor: "bg-green-100"
                                 },
                                 {
                                     icon: DollarSign,
-                                    title: "Payment Received",
-                                    description: "$4,200 from Emma's Sweet 16",
-                                    time: "1 day ago",
+                                    title: t('vendorDashboard.activities.paymentReceived'),
+                                    description: t('vendorDashboard.activities.paymentFrom'),
+                                    time: t('vendorDashboard.time.daysAgo'),
                                     color: "text-secondary",
                                     bgColor: "bg-secondary/10"
                                 },
                                 {
                                     icon: Mail,
-                                    title: "New Message",
-                                    description: "From Planora Events",
-                                    time: "2 days ago",
+                                    title: t('vendorDashboard.activities.newMessage'),
+                                    description: t('vendorDashboard.activities.fromPlanora'),
+                                    time: t('vendorDashboard.time.daysAgo'),
                                     color: "text-primary",
                                     bgColor: "bg-primary/10"
                                 },
@@ -124,15 +152,33 @@ export function VendorDashboard() {
                     {/* Quick Actions */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg sm:text-xl">Quick Actions</CardTitle>
+                            <CardTitle className="text-lg sm:text-xl">
+                                {t('vendorDashboard.quickActions')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-1 gap-3">
                                 {[
-                                    { label: "Add New Service", icon: FileText, variant: "default" as const },
-                                    { label: "View Calendar", icon: Calendar, variant: "outline" as const },
-                                    { label: "Generate Report", icon: FileText, variant: "outline" as const },
-                                    { label: "Message Center", icon: Mail, variant: "outline" as const },
+                                    {
+                                        label: t('vendorDashboard.actions.addService'),
+                                        icon: FileText,
+                                        variant: "default" as const
+                                    },
+                                    {
+                                        label: t('vendorDashboard.actions.viewCalendar'),
+                                        icon: Calendar,
+                                        variant: "outline" as const
+                                    },
+                                    {
+                                        label: t('vendorDashboard.actions.generateReport'),
+                                        icon: FileText,
+                                        variant: "outline" as const
+                                    },
+                                    {
+                                        label: t('vendorDashboard.actions.messageCenter'),
+                                        icon: Mail,
+                                        variant: "outline" as const
+                                    },
                                 ].map((action, index) => (
                                     <Button
                                         key={index}
@@ -150,14 +196,18 @@ export function VendorDashboard() {
                     {/* Performance Summary */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg sm:text-xl">Performance Summary</CardTitle>
+                            <CardTitle className="text-lg sm:text-xl">
+                                {t('vendorDashboard.performanceSummary')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
                                         <Target className="w-4 h-4 text-muted-foreground" />
-                                        <span className="text-sm text-muted-foreground">Monthly Target</span>
+                                        <span className="text-sm text-muted-foreground">
+                                            {t('vendorDashboard.metrics.monthlyTarget')}
+                                        </span>
                                     </div>
                                     <span className="font-medium text-sm">85%</span>
                                 </div>
@@ -170,9 +220,13 @@ export function VendorDashboard() {
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
                                         <Clock className="w-4 h-4 text-muted-foreground" />
-                                        <span className="text-sm text-muted-foreground">Avg Response Time</span>
+                                        <span className="text-sm text-muted-foreground">
+                                            {t('vendorDashboard.metrics.avgResponseTime')}
+                                        </span>
                                     </div>
-                                    <span className="font-medium text-sm text-green-600">2.4h</span>
+                                    <span className="font-medium text-sm text-green-600">
+                                        {t('vendorDashboard.metrics.responseTimeValue')}
+                                    </span>
                                 </div>
                                 <div className="h-2 bg-muted rounded-full overflow-hidden w-full">
                                     <div className="h-full bg-green-500 w-3/4"></div>
