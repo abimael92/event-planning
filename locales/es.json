@@ -252,6 +252,7 @@
     "vendorDashboard": {
         "welcome": "Bienvenido de nuevo, {name}",
         "overview": "Aquí tienes un resumen de tus reservas y rendimiento",
+        "currency": "${amount, number, EUR}",
         "stats": {
             "activeBookings": "Reservas Activas",
             "totalRevenue": "Ingresos Totales",
@@ -263,62 +264,29 @@
             "bookingConfirmed": "Reserva Confirmada",
             "corporateGala": "Gala Corporativa 2024",
             "paymentReceived": "Pago Recibido",
-            "paymentFrom": "${amount} de {event}",
+            "paymentFrom": "${amount, number, EUR} de {event}",
             "emmaSweet16": "Fiesta de 15 de Emma",
             "newMessage": "Nuevo Mensaje",
             "fromPlanora": "De Planora Events"
         },
         "time": {
-            "hoursAgo": "hace {count} {count, plural, one {hora} other {horas}}",
-            "daysAgo": "hace {count} {count, plural, one {día} other {días}}"
+            "hoursAgo": "hace {count} {count, plural, =1 {hora} other {horas}}",
+            "daysAgo": "hace {count} {count, plural, =1 {día} other {días}}"
         },
         "quickActions": "Acciones Rápidas",
+        "actions": {
+            "addService": "Añadir Nuevo Servicio",
+            "viewCalendar": "Ver Calendario",
+            "generateReport": "Generar Reporte",
+            "messageCenter": "Centro de Mensajes"
+        },
         "performanceSummary": "Resumen de Rendimiento",
         "metrics": {
             "monthlyTarget": "Objetivo Mensual",
+            "percentage": "{value}%",
             "avgResponseTime": "Tiempo Medio de Respuesta",
-            "responseTimeValue": "{hours}h"
-        },
-        "timeAgo": {
-            "hours": "horas atrás",
-            "days": "días atrás"
-        },
-        "upcomingEvents": {
-            "summerWedding": "Boda de Verano",
-            "corporateRetreat": "Retiro Corporativo",
-            "charityGala": "Gala Benéfica"
-        },
-        "dateFormat": {
-            "nov25": "25 Nov, 2024",
-            "nov28": "28 Nov, 2024",
-            "dec2": "2 Dic, 2024"
-        },
-        "sections": {
-            "recentActivity": "Actividad Reciente",
-            "recentActivityDescription": "Últimas actualizaciones y notificaciones",
-            "upcomingEvents": "Próximos Eventos",
-            "upcomingEventsDescription": "Tu horario para la próxima semana",
-            "quickActions": "Acciones Rápidas",
-            "quickActionsDescription": "Tareas frecuentemente usadas"
-        },
-        "badge": {
-            "new": "nuevo"
-        },
-        "actions": {
-            "exportReport": "Exportar Reporte",
-            "newEvent": "Nuevo Evento",
-            "viewAll": "Ver Todo",
-            "viewFullCalendar": "Ver Calendario Completo",
-            "createEvent": "Crear Nuevo Evento",
-            "manageBookings": "Gestionar Reservas",
-            "viewAnalytics": "Ver Analíticas"
-        },
-        "status": {
-            "confirmed": "confirmado",
-            "pending": "pendiente",
-            "completed": "completado"
-        },
-        "guestsLabel": "invitados"
+            "responseTimeValue": "{hours, number, .1}h"
+        }
     },
     "events": {
         "create": {
