@@ -18,6 +18,15 @@ export function VendorDashboard() {
         satisfactionRate: 96,
     }
 
+    // Format time ago with proper pluralization
+    const formatTimeAgo = (count: number, unit: 'hour' | 'day') => {
+        if (unit === 'hour') {
+            return t('vendorDashboard.time.hoursAgo').replace('{{count}}', count.toString())
+        } else {
+            return t('vendorDashboard.time.daysAgo').replace('{{count}}', count.toString())
+        }
+    }
+
     return (
         <div className="min-h-screen bg-background p-4 sm:p-6 space-y-6 sm:space-y-8 max-w-full overflow-x-hidden">
             {/* Header */}
@@ -35,7 +44,7 @@ export function VendorDashboard() {
                 {[
                     {
                         title: t('vendorDashboard.stats.activeBookings'),
-                        value: stats.activeBookings,
+                        value: stats.activeBookings.toString(),
                         icon: Calendar,
                         color: "text-primary",
                         bgColor: "bg-primary/10"
@@ -49,7 +58,7 @@ export function VendorDashboard() {
                     },
                     {
                         title: t('vendorDashboard.stats.upcomingEvents'),
-                        value: stats.upcomingEvents,
+                        value: stats.upcomingEvents.toString(),
                         icon: Users,
                         color: "text-accent",
                         bgColor: "bg-accent/10"
@@ -100,15 +109,15 @@ export function VendorDashboard() {
                                     icon: CheckCircle,
                                     title: t('vendorDashboard.activities.bookingConfirmed'),
                                     description: t('vendorDashboard.activities.corporateGala'),
-                                    time: t('vendorDashboard.time.hoursAgo'),
+                                    time: formatTimeAgo(2, 'hour'),
                                     color: "text-green-600",
                                     bgColor: "bg-green-100"
                                 },
                                 {
                                     icon: DollarSign,
                                     title: t('vendorDashboard.activities.paymentReceived'),
-                                    description: t('vendorDashboard.activities.paymentFrom'),
-                                    time: t('vendorDashboard.time.daysAgo'),
+                                    description: t('vendorDashboard.activities.paymentFrom').replace('{{amount}}', '4200').replace('{{event}}', "Emma's Sweet 16"),
+                                    time: formatTimeAgo(1, 'day'),
                                     color: "text-secondary",
                                     bgColor: "bg-secondary/10"
                                 },
@@ -116,7 +125,7 @@ export function VendorDashboard() {
                                     icon: Mail,
                                     title: t('vendorDashboard.activities.newMessage'),
                                     description: t('vendorDashboard.activities.fromPlanora'),
-                                    time: t('vendorDashboard.time.daysAgo'),
+                                    time: formatTimeAgo(2, 'day'),
                                     color: "text-primary",
                                     bgColor: "bg-primary/10"
                                 },
@@ -209,7 +218,9 @@ export function VendorDashboard() {
                                             {t('vendorDashboard.metrics.monthlyTarget')}
                                         </span>
                                     </div>
-                                    <span className="font-medium text-sm">85%</span>
+                                    <span className="font-medium text-sm">
+                                        {t('vendorDashboard.metrics.percentage').replace('{{value}}', '85')}
+                                    </span>
                                 </div>
                                 <div className="h-2 bg-muted rounded-full overflow-hidden w-full">
                                     <div className="h-full bg-primary w-4/5"></div>
