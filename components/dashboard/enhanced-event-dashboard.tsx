@@ -244,18 +244,18 @@ export function EnhancedEventDashboard() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 mb-3">
-                      <div className="text-center">
-                        <p className="text-sm md:text-base font-semibold">{event.progress}%</p>
-                        <p className="text-xs text-muted-foreground truncate">{t('dashboard.events.complete')}</p>
+                    <div className="grid grid-cols-3 gap-2 my-3">
+                      <div className="text-center bg-violet-300/50 p-2 rounded-lg">
+                        <p className="text-xl font-semibold">{event.progress}%</p>
+                        <p className="text-lg text-muted-foreground truncate">{t('dashboard.events.complete')}</p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm md:text-base font-semibold">{event.vendors}</p>
-                        <p className="text-xs text-muted-foreground truncate">{t('dashboard.events.vendors')}</p>
+                      <div className="text-center bg-violet-300/50 p-2 rounded-lg">
+                        <p className="text-xl font-semibold">{event.vendors}</p>
+                        <p className="text-lg text-muted-foreground truncate">{t('dashboard.events.vendors')}</p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm md:text-base font-semibold">${(event.spent / 1000).toFixed(0)}k</p>
-                        <p className="text-xs text-muted-foreground truncate">{t('dashboard.events.spent')}</p>
+                      <div className="text-center bg-violet-300/50 p-2 rounded-lg">
+                        <p className="text-xl font-semibold">${(event.spent / 1000).toFixed(0)}k</p>
+                        <p className="text-lg text-muted-foreground truncate">{t('dashboard.events.spent')}</p>
                       </div>
                     </div>
                   </div>
