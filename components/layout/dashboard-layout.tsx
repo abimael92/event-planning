@@ -293,9 +293,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 relative">
         {/* Top Bar */}
-        <header className="bg-white/60 backdrop-blur-xl border-b border-white/40 px-4 lg:px-6 py-3 lg:py-4 sticky top-0 z-30">
+        <header className="bg-white/60 backdrop-blur-xl border-b border-white/40 px-4 lg:px-6 py-3 lg:py-4 flex-shrink-0 sticky top-0 z-30">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 lg:gap-4 flex-1">
               <Button
@@ -336,8 +336,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto p-4 lg:p-6">
-          <div className="max-w-7xl mx-auto w-full">
+        <div className="absolute inset-0 top-14 bottom-0 overflow-y-auto">
+          <div className="p-4 lg:p-6 max-w-7xl mx-auto w-full">
             {children}
           </div>
         </div>
