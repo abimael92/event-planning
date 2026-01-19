@@ -250,21 +250,51 @@
         }
     },
     "vendorDashboard": {
-        "welcome": "Bienvenido de nuevo, {name}",
+        "welcome": "Bienvenido de nuevo, ",
         "overview": "Aquí tienes un resumen de tus reservas y rendimiento",
-        "currency": "${amount, number, EUR}",
         "stats": {
             "activeBookings": "Reservas Activas",
             "totalRevenue": "Ingresos Totales",
             "upcomingEvents": "Eventos Próximos",
-            "satisfactionRate": "Tasa de Satisfacción"
+            "satisfactionRate": "Tasa de Satisfacción",
+            "monthlyGrowth": "Crecimiento Mensual",
+            "completionRate": "Tasa de Completación"
+        },
+        "metrics": {
+            "bookingRate": "Tasa de Reservas",
+            "revenueGrowth": "Crecimiento de Ingresos",
+            "clientSatisfaction": "Satisfacción del Cliente",
+            "responseTime": "Tiempo de Respuesta",
+            "monthlyTarget": "Objetivo Mensual",
+            "avgResponseTime": "Tiempo Promedio de Respuesta",
+            "percentage": "{value}%",
+            "responseTimeValue": "{hours, number, .1}h"
+        },
+        "quickActions": "Acciones Rápidas",
+        "actions": {
+            "addService": "Añadir Nuevo Servicio",
+            "viewCalendar": "Ver Calendario",
+            "generateReport": "Generar Reporte",
+            "messageCenter": "Centro de Mensajes",
+            "createEvent": "Crear Evento"
+        },
+        "performanceSummary": "Resumen de Rendimiento",
+        "quickLinks": {
+            "createPackage": "Crear Paquete",
+            "createPackageDesc": "Crea nuevos paquetes de servicios",
+            "uploadPortfolio": "Subir Portafolio",
+            "uploadPortfolioDesc": "Añade fotos y videos de tu trabajo",
+            "manageCalendar": "Gestionar Calendario",
+            "manageCalendarDesc": "Establece tu disponibilidad",
+            "clientFeedback": "Comentarios",
+            "clientFeedbackDesc": "Revisa opiniones de clientes"
         },
         "recentActivity": "Actividad Reciente",
         "activities": {
             "bookingConfirmed": "Reserva Confirmada",
             "corporateGala": "Gala Corporativa 2024",
             "paymentReceived": "Pago Recibido",
-            "paymentFrom": "${amount, number, EUR} de {event}",
+            "paymentFrom": "${amount} de {event}",
             "emmaSweet16": "Fiesta de 15 de Emma",
             "newMessage": "Nuevo Mensaje",
             "fromPlanora": "De Planora Events"
@@ -272,20 +302,34 @@
         "time": {
             "hoursAgo": "hace {count} {count, plural, =1 {hora} other {horas}}",
             "daysAgo": "hace {count} {count, plural, =1 {día} other {días}}"
+        }
+    },
+    "ui": {
+        "tabs": {
+            "overview": "Resumen",
+            "events": "Eventos",
+            "payments": "Pagos",
+            "performance": "Rendimiento"
         },
-        "quickActions": "Acciones Rápidas",
-        "actions": {
-            "addService": "Añadir Nuevo Servicio",
-            "viewCalendar": "Ver Calendario",
-            "generateReport": "Generar Reporte",
-            "messageCenter": "Centro de Mensajes"
+        "notifications": {
+            "title": "Notificaciones",
+            "new": "Nuevo",
+            "markAsRead": "Marcar como leído",
+            "markAllAsRead": "Marcar todo como leído"
         },
-        "performanceSummary": "Resumen de Rendimiento",
-        "metrics": {
-            "monthlyTarget": "Objetivo Mensual",
-            "percentage": "{value}%",
-            "avgResponseTime": "Tiempo Medio de Respuesta",
-            "responseTimeValue": "{hours, number, .1}h"
+        "progress": "Progreso",
+        "target": "Objetivo",
+        "current": "Actual",
+        "trend": {
+            "up": "Alza",
+            "down": "Baja"
+        },
+        "tooltips": {
+            "refresh": "Refrescar Dashboard",
+            "export": "Exportar Reporte",
+            "settings": "Configuración",
+            "profile": "Perfil",
+            "notifications": "Notificaciones"
         }
     },
     "events": {
@@ -368,6 +412,29 @@
         "edit": "Editar",
         "create": "Crear",
         "viewAll": "Ver Todo",
-        "seeMore": "Ver Más"
+        "seeMore": "Ver Más",
+        "export": "Exportar",
+        "filter": "Filtrar",
+        "refresh": "Refrescar",
+        "share": "Compartir",
+        "download": "Descargar",
+        "upload": "Subir",
+        "search": "Buscar",
+        "status": {
+            "active": "Activo",
+            "pending": "Pendiente",
+            "completed": "Completado",
+            "cancelled": "Cancelado",
+            "draft": "Borrador",
+            "confirmed": "Confirmado",
+            "paid": "Pagado",
+            "overdue": "Vencido"
+        },
+        "loading": "Cargando...",
+        "noData": "No hay datos disponibles",
+        "success": "Éxito",
+        "failed": "Fallido",
+        "warning": "Advertencia",
+        "info": "Información"
     }
 }
