@@ -177,6 +177,21 @@ export function EnhancedEventDashboard() {
   const nextEvent = sortedEvents[0]
   const totalBudget = sortedEvents.reduce((sum, event) => sum + event.budget, 0)
   const totalSpent = sortedEvents.reduce((sum, event) => sum + event.spent, 0)
+  
+  const ThreeDollarIcons = () => (
+    <div className="flex scale-[0.7] -mx-3">
+      <DollarSign className="text-cyan-400 -mr-1" />
+      <DollarSign className="text-cyan-400 -mx-1" />
+      <DollarSign className="text-cyan-400 -ml-1" />
+    </div>
+  )
+  
+  const NegativeDollarIcon = () => (
+    <div className={`flex items-center scale-[0.8] m-0 p-0`}>
+      <span className="text-red-200 -mr-1">-</span>
+      <DollarSign className="text-red-200" />
+    </div>
+  )
 
   // If viewing guest list for a specific event
   if (selectedEventForGuests) {
@@ -275,19 +290,19 @@ export function EnhancedEventDashboard() {
 
             {/* Next Event Card - Responsive */}
             <motion.div
-              className={`${glassEffectIntense} rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 w-full shadow-lg hover:shadow-xl transition-all duration-300`}
+              className={`${glassEffectIntense} rounded-lg  border-2 sm:rounded-xl p-3 sm:p-4 md:p-6 w-full shadow-lg hover:shadow-xl transition-all duration-300`}
               whileHover={{ scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="flex flex-col md:flex-row items-start md:items-center gap-3 sm:gap-4">
                 <div className="flex-shrink-0">
                   <div
-                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
+                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 border-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
                     style={{ background: nextEvent.cover }}
                   >
                     {(() => {
                       const Icon = eventIcons[nextEvent.category as keyof typeof eventIcons] || eventIcons.default
-                      return <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
+                      return <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-gray-200" />
                     })()}
                   </div>
                 </div>
@@ -295,8 +310,8 @@ export function EnhancedEventDashboard() {
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-base sm:text-lg md:text-xl mb-1 truncate">{nextEvent.title}</p>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-white/80 text-xs sm:text-sm">
+                      <p className="font-bold text-base text-pink-700 sm:text-lg md:text-xl mb-1 truncate">{nextEvent.title}</p>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-gray-700 text-xs sm:text-sm">
                         <span className="flex items-center gap-1 truncate">
                           <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                           {new Date(nextEvent.date).toLocaleDateString('es-MX', {
@@ -305,7 +320,7 @@ export function EnhancedEventDashboard() {
                             day: 'numeric'
                           })}
                         </span>
-                        <span className="hidden sm:block text-white/50">•</span>
+                        <span className="hidden sm:block text-gray-700">•</span>
                         <span className="flex items-center gap-1 truncate">
                           <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                           {nextEvent.time}
@@ -329,7 +344,7 @@ export function EnhancedEventDashboard() {
                   </div>
 
                   <div className="mt-3 sm:mt-4">
-                    <div className="flex justify-between text-xs sm:text-sm mb-1">
+                    <div className="flex justify-between text-gray-700 text-xs sm:text-sm mb-1">
                       <span>Progreso del evento</span>
                       <span className="font-semibold">{nextEvent.progress}%</span>
                     </div>
@@ -394,22 +409,19 @@ export function EnhancedEventDashboard() {
             gradient: "from-orange-500 via-amber-500 to-yellow-500",
             glow: "hover:shadow-orange-500/30",
           },
-        ].map((action, index) => (
-          <motion.div
-            key={index}
-            whileHover={{
-              scale: 1.02,
-              y: -2,
-            }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + index * 0.1 }}
-            className="w-full"
-          >
-            <Button
+        ].map((action, index) => {
+          const MotionButton = motion(Button);
+
+          return (
+            <MotionButton
+              key={index}
               onClick={action.onClick}
               className={`w-full h-12 sm:h-14 bg-gradient-to-r ${action.gradient} opacity-80 text-white border-0 shadow-md ${action.glow} transition-all duration-300 rounded-lg hover:shadow-lg group relative overflow-hidden`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + index * 0.1 }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
             >
               {/* Shine effect */}
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -418,9 +430,9 @@ export function EnhancedEventDashboard() {
                 <action.icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-semibold text-xs sm:text-sm md:text-base truncate">{action.label}</span>
               </div>
-            </Button>
-          </motion.div>
-        ))}
+            </MotionButton>
+          )
+        })}
       </motion.div>
 
       {/* Upcoming Events Section - Responsive */}
@@ -467,7 +479,7 @@ export function EnhancedEventDashboard() {
                   {/* Main Card */}
                   <Card className="relative overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm w-full">
                     {/* Card Background Gradient */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${event.gradient} opacity-25 group-hover:opacity-10 transition-opacity duration-300`} />
+                    <div className={`absolute inset-0 bg-gradient-to-r ${event.gradient} opacity-10 group-hover:opacity-10 transition-opacity duration-300`} />
 
                     {/* Animated border on hover */}
                     <div className="absolute inset-0 border border-transparent group-hover:border-gray-200/50 rounded-xl sm:rounded-2xl transition-colors duration-300" />
@@ -525,22 +537,22 @@ export function EnhancedEventDashboard() {
                               value: `${event.progress}%`,
                               label: 'Progreso',
                               icon: TrendingUp,
-                              color: event.accentColor,
-                              bgColor: `${event.accentColor}10`
+                              color: '#ff56cc',
+                              bgColor: '#ffccf0'
                             },
                             {
                               value: event.vendors,
                               label: 'Proveedores',
                               icon: Users,
                               color: '#6366f1',
-                              bgColor: '#6366f110'
+                              bgColor: '#a5a7f0'
                             },
                             {
                               value: `$${(event.spent / 1000).toFixed(0)}k`,
                               label: 'Gastado',
                               icon: DollarSign,
                               color: '#10b981',
-                              bgColor: '#10b98110'
+                              bgColor: '#d5fff0'
                             },
                           ].map((stat, i) => (
                             <motion.div
@@ -652,22 +664,22 @@ export function EnhancedEventDashboard() {
                   {
                     value: `$${(totalBudget / 1000).toFixed(0)}k`,
                     label: t('dashboard.events.totalBudget'),
-                    icon: DollarSign,
-                    gradient: "from-blue-500 to-cyan-500",
+                    icon: ThreeDollarIcons,
+                    gradient: "from-blue-500 to-blue-500",
                     borderColor: "border-blue-200",
                   },
                   {
                     value: `$${(totalSpent / 1000).toFixed(0)}k`,
                     label: t('dashboard.events.spent'),
-                    icon: TrendingUp,
-                    gradient: "from-green-500 to-emerald-500",
-                    borderColor: "border-green-200",
+                    icon: NegativeDollarIcon,
+                    gradient: "from-red-500 to-red-600",
+                    borderColor: "border-red-200",
                   },
                   {
                     value: `$${((totalBudget - totalSpent) / 1000).toFixed(0)}k`,
                     label: t('dashboard.events.remaining'),
                     icon: DollarSign,
-                    gradient: "from-purple-500 to-pink-500",
+                    gradient: "from-purple-400 to-purple-500",
                     borderColor: "border-purple-200",
                   },
                 ].map((stat, index) => (
@@ -687,16 +699,16 @@ export function EnhancedEventDashboard() {
                     <div className="relative z-10">
                       <div className="flex items-center justify-between mb-2">
                         <div className={`p-1.5 sm:p-2 rounded-lg bg-gradient-to-r ${stat.gradient} bg-opacity-10`}>
-                          <stat.icon className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                          <stat.icon className="w-5 h-5 sm:w-4 sm:h-4 md:w-5 md:h-5"
                             style={{
                               color: stat.gradient.includes('blue') ? '#3b82f6' :
                                 stat.gradient.includes('green') ? '#10b981' :
-                                  '#8b5cf6'
+                                  '#ff83e6'
                             }}
                           />
                         </div>
                         <span className={`text-xs font-semibold px-2 py-1 rounded-full ${index === 0 ? 'bg-blue-100 text-blue-600' :
-                            index === 1 ? 'bg-green-100 text-green-600' :
+                            index === 1 ? 'bg-red-100 text-red-600' :
                               'bg-purple-100 text-purple-600'
                           }`}>
                           {index === 0 ? 'Total' : index === 1 ? 'Gastado' : 'Restante'}
