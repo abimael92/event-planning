@@ -137,6 +137,7 @@ export function EnhancedEventDashboard() {
   const [selectedEventForGuests, setSelectedEventForGuests] = useState<typeof upcomingEvents[0] | null>(null)
   const [hoveredEvent, setHoveredEvent] = useState<string | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [currentEventIndex, setCurrentEventIndex] = useState(0)
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -165,16 +166,40 @@ export function EnhancedEventDashboard() {
   }
 
   // Sort events by date and find the next event
+  // Sort events by date and find the next event - Shows all but sorts properly
   const sortedEvents = useMemo(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
     return upcomingEvents
-      .map(event => ({
-        ...event,
-        daysLeft: calculateDaysLeft(event.date)
-      }))
-      .sort((a, b) => a.daysLeft - b.daysLeft)
+      .map(event => {
+        const eventDate = new Date(event.date)
+        eventDate.setHours(0, 0, 0, 0)
+        const diffTime = eventDate.getTime() - today.getTime()
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+        return {
+          ...event,
+          daysLeft: diffDays,
+          isPast: diffDays < 0,
+          absoluteDays: Math.abs(diffDays)
+        }
+      })
+      .sort((a, b) => {
+        // Sort by: future events first (positive days), then by closest date
+        if (a.daysLeft >= 0 && b.daysLeft >= 0) {
+          return a.daysLeft - b.daysLeft
+        } else if (a.daysLeft >= 0) {
+          return -1 // a is future, b is past
+        } else if (b.daysLeft >= 0) {
+          return 1 // b is future, a is past
+        } else {
+          return b.absoluteDays - a.absoluteDays // both past, most recent first
+        }
+      })
   }, [])
 
-  const nextEvent = sortedEvents[0]
+  const nextEvent = sortedEvents.find(event => event.daysLeft >= 0) || sortedEvents[0]
   const totalBudget = sortedEvents.reduce((sum, event) => sum + event.budget, 0)
   const totalSpent = sortedEvents.reduce((sum, event) => sum + event.spent, 0)
   
@@ -281,85 +306,128 @@ export function EnhancedEventDashboard() {
               </div>
             </div>
 
-            <p className="text-white/90 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 max-w-2xl">
-              {t('dashboard.events.nextEventIn').replace('{days}', nextEvent.daysLeft.toString())}
-              <span className="font-semibold text-yellow-200 ml-1 inline-flex items-center">
-                <Zap className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-              </span>
-            </p>
-
             {/* Next Event Card - Responsive */}
-            <motion.div
-              className={`${glassEffectIntense} rounded-lg  border-2 sm:rounded-xl p-3 sm:p-4 md:p-6 w-full shadow-lg hover:shadow-xl transition-all duration-300`}
-              whileHover={{ scale: 1.01 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-3 sm:gap-4">
-                <div className="flex-shrink-0">
-                  <div
-                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 border-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
-                    style={{ background: nextEvent.cover }}
+            <div className="space-y-4">
+
+              {/* The Card Itself */}
+              <motion.div
+                className={`${glassEffectIntense} rounded-lg border-2 sm:rounded-xl p-3 sm:p-4 md:p-6 w-full shadow-lg hover:shadow-xl transition-all duration-300`}
+                whileHover={{ scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={sortedEvents[currentEventIndex].id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {(() => {
-                      const Icon = eventIcons[nextEvent.category as keyof typeof eventIcons] || eventIcons.default
-                      return <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-gray-200" />
-                    })()}
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-base text-pink-700 sm:text-lg md:text-xl mb-1 truncate">{nextEvent.title}</p>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-gray-700 text-xs sm:text-sm">
-                        <span className="flex items-center gap-1 truncate">
-                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          {new Date(nextEvent.date).toLocaleDateString('es-MX', {
-                            weekday: 'short',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </span>
-                        <span className="hidden sm:block text-gray-700">•</span>
-                        <span className="flex items-center gap-1 truncate">
-                          <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          {nextEvent.time}
-                        </span>
-                      </div>
-                    </div>
-
-                    <motion.div
-                      className="flex items-center gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mt-2 sm:mt-0 w-fit"
-                      animate={pulseVariants.pulse}
-                      style={{ background: nextEvent.cover }}
-                    >
-                      <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <div className="text-right">
-                        <div className="flex flex-col items-center text-center">
-                          <p className="text-lg sm:text-xl md:text-2xl font-bold">{nextEvent.daysLeft}</p>
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 sm:gap-4">
+                      <div className="flex-shrink-0">
+                        <div
+                          className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 border-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
+                          style={{ background: sortedEvents[currentEventIndex].cover }}
+                        >
+                          {(() => {
+                            const Icon = eventIcons[sortedEvents[currentEventIndex].category as keyof typeof eventIcons] || eventIcons.default
+                            return <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-gray-200" />
+                          })()}
                         </div>
-                        <p className="text-xs">{t('dashboard.events.daysLeft')}</p>
                       </div>
-                    </motion.div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-base text-pink-700 sm:text-lg md:text-xl mb-1 truncate">
+                              {sortedEvents[currentEventIndex].title}
+                            </p>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-gray-700 text-xs sm:text-sm">
+                              <span className="flex items-center gap-1 truncate">
+                                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                                {new Date(sortedEvents[currentEventIndex].date).toLocaleDateString('es-MX', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })}
+                              </span>
+                              <span className="hidden sm:block text-gray-700">•</span>
+                              <span className="flex items-center gap-1 truncate">
+                                <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                                {sortedEvents[currentEventIndex].time}
+                              </span>
+                            </div>
+                          </div>
+
+                          <motion.div
+                            className="flex items-center gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mt-2 sm:mt-0 w-fit"
+                            animate={pulseVariants.pulse}
+                            style={{ background: sortedEvents[currentEventIndex].cover }}
+                          >
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <div className="text-right">
+                              <div className="flex flex-col items-center text-center">
+                                <p className="text-lg sm:text-xl md:text-2xl font-bold">
+                                  {sortedEvents[currentEventIndex].daysLeft}
+                                </p>
+                              </div>
+                              <p className="text-xs">{t('dashboard.events.daysLeft')}</p>
+                            </div>
+                          </motion.div>
+                        </div>
+
+                        <div className="mt-3 sm:mt-4">
+                          <div className="flex justify-between text-gray-700 text-xs sm:text-sm mb-1">
+                            <span>Progreso del evento</span>
+                            <span className="font-semibold">{sortedEvents[currentEventIndex].progress}%</span>
+                          </div>
+                          <div className="h-1.5 sm:h-2 bg-white/20 rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${sortedEvents[currentEventIndex].progress}%` }}
+                              transition={{ duration: 1.5, delay: 0.5 }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </motion.div>
+
+              {/* Carousel Navigation */}
+              <div className="flex justify-between items-center">
+               
+
+                  {/* Navigation arrows */}
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => {
+                        const prevIndex = currentEventIndex > 0 ? currentEventIndex - 1 : sortedEvents.length - 1
+                        setCurrentEventIndex(prevIndex)
+                      }}
+                      className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-all duration-300"
+                    >
+                      <ChevronRight className="w-4 h-4 rotate-180 text-gray-600" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        const nextIndex = currentEventIndex < sortedEvents.length - 1 ? currentEventIndex + 1 : 0
+                        setCurrentEventIndex(nextIndex)
+                      }}
+                      className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-all duration-300"
+                    >
+                      <ChevronRight className="w-4 h-4 text-gray-600" />
+                    </button>
                   </div>
 
-                  <div className="mt-3 sm:mt-4">
-                    <div className="flex justify-between text-gray-700 text-xs sm:text-sm mb-1">
-                      <span>Progreso del evento</span>
-                      <span className="font-semibold">{nextEvent.progress}%</span>
-                    </div>
-                    <div className="h-1.5 sm:h-2 bg-white/20 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${nextEvent.progress}%` }}
-                        transition={{ duration: 1.5, delay: 0.5 }}
-                      />
-                    </div>
+                  {/* Page indicator */}
+                  <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                    {currentEventIndex + 1} / {sortedEvents.length}
                   </div>
                 </div>
-              </div>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </motion.div>
