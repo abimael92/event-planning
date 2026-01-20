@@ -177,7 +177,21 @@ export function EnhancedEventDashboard() {
   const nextEvent = sortedEvents[0]
   const totalBudget = sortedEvents.reduce((sum, event) => sum + event.budget, 0)
   const totalSpent = sortedEvents.reduce((sum, event) => sum + event.spent, 0)
+  
+  const ThreeDollarIcons = () => (
+    <div className="flex -space-x-1">
+      <DollarSign className="w-3 h-5 text-cyan-300" />
+      <DollarSign className="w-3 h-5 text-cyan-300" />
+      <DollarSign className="w-3 h-5 text-cyan-300" />
+    </div>
+  )
 
+  const NegativeDollarIcon = ({ className }: { className?: string }) => (
+    <div className={`flex items-center justify-center ${className}`}>
+      <span className="text-red-100  mr-0.5 text-sm">-</span>
+      <DollarSign className="w-3 h-5 text-red-100" />
+    </div>
+  )
   // If viewing guest list for a specific event
   if (selectedEventForGuests) {
     return (
@@ -394,22 +408,19 @@ export function EnhancedEventDashboard() {
             gradient: "from-orange-500 via-amber-500 to-yellow-500",
             glow: "hover:shadow-orange-500/30",
           },
-        ].map((action, index) => (
-          <motion.div
-            key={index}
-            whileHover={{
-              scale: 1.02,
-              y: -2,
-            }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + index * 0.1 }}
-            className="w-full"
-          >
-            <Button
+        ].map((action, index) => {
+          const MotionButton = motion(Button);
+
+          return (
+            <MotionButton
+              key={index}
               onClick={action.onClick}
               className={`w-full h-12 sm:h-14 bg-gradient-to-r ${action.gradient} opacity-80 text-white border-0 shadow-md ${action.glow} transition-all duration-300 rounded-lg hover:shadow-lg group relative overflow-hidden`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + index * 0.1 }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
             >
               {/* Shine effect */}
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -418,9 +429,9 @@ export function EnhancedEventDashboard() {
                 <action.icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-semibold text-xs sm:text-sm md:text-base truncate">{action.label}</span>
               </div>
-            </Button>
-          </motion.div>
-        ))}
+            </MotionButton>
+          )
+        })}
       </motion.div>
 
       {/* Upcoming Events Section - Responsive */}
@@ -652,16 +663,16 @@ export function EnhancedEventDashboard() {
                   {
                     value: `$${(totalBudget / 1000).toFixed(0)}k`,
                     label: t('dashboard.events.totalBudget'),
-                    icon: DollarSign,
+                    icon: ThreeDollarIcons,
                     gradient: "from-blue-500 to-cyan-500",
                     borderColor: "border-blue-200",
                   },
                   {
                     value: `$${(totalSpent / 1000).toFixed(0)}k`,
                     label: t('dashboard.events.spent'),
-                    icon: TrendingUp,
-                    gradient: "from-green-500 to-emerald-500",
-                    borderColor: "border-green-200",
+                    icon: NegativeDollarIcon,
+                    gradient: "from-red-500 to-pink-500",
+                    borderColor: "border-red-200",
                   },
                   {
                     value: `$${((totalBudget - totalSpent) / 1000).toFixed(0)}k`,
@@ -687,16 +698,16 @@ export function EnhancedEventDashboard() {
                     <div className="relative z-10">
                       <div className="flex items-center justify-between mb-2">
                         <div className={`p-1.5 sm:p-2 rounded-lg bg-gradient-to-r ${stat.gradient} bg-opacity-10`}>
-                          <stat.icon className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                          <stat.icon className="w-3 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5"
                             style={{
-                              color: stat.gradient.includes('blue') ? '#3b82f6' :
-                                stat.gradient.includes('green') ? '#10b981' :
-                                  '#8b5cf6'
+                              color: stat.gradient.includes('blue') ? '#a3c5fb' :
+                                stat.gradient.includes('green') ? '#82f8d1' :
+                                  '#b393ff'
                             }}
                           />
                         </div>
                         <span className={`text-xs font-semibold px-2 py-1 rounded-full ${index === 0 ? 'bg-blue-100 text-blue-600' :
-                            index === 1 ? 'bg-green-100 text-green-600' :
+                            index === 1 ? 'bg-red-100 text-red-600' :
                               'bg-purple-100 text-purple-600'
                           }`}>
                           {index === 0 ? 'Total' : index === 1 ? 'Gastado' : 'Restante'}
