@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Search, Star, MapPin, Phone, Mail, Globe, Music, Flower, Utensils, Home, Camera, Car, Cake } from "lucide-react"
+import { Search, Star, MapPin, Phone, Mail, Globe, Music, Flower, Utensils, Home, Camera, Car, Cake, X } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTranslation } from "@/hooks/use-translation"
 
@@ -355,7 +355,7 @@ export default function VendorsPage() {
         setFilteredVendors(results)
     }, [searchQuery, selectedCategory])
 
-    const categories: { id: VendorCategory; count: number; icon: React.ReactNode }[] = [
+    const categories: { id: VendorCategory; count: number; icon: React.ReactNode; description?: string }[] = [
         { id: "all", count: chihuahuaVendors.length, icon: categoryIcons.all },
         { id: "music", count: chihuahuaVendors.filter(v => v.category === "music").length, icon: categoryIcons.music },
         { id: "decoration", count: chihuahuaVendors.filter(v => v.category === "decoration").length, icon: categoryIcons.decoration },
@@ -423,174 +423,216 @@ export default function VendorsPage() {
                 </div>
             </div>
 
-            {/* Category Tabs */}
-            <div className="overflow-x-auto pb-2">
-                <Tabs defaultValue="all" className="w-full" onValueChange={(value) => setSelectedCategory(value as VendorCategory)}>
-                    <TabsList className="flex w-full justify-start bg-transparent p-0 gap-2 overflow-x-auto">
-                        {categories.map((category) => (
-                            <TabsTrigger
-                                key={category.id}
-                                value={category.id}
-                                className="flex items-center gap-2 px-4 py-3 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white transition-all whitespace-nowrap"
-                            >
-                                {category.icon}
-                                <span className="font-medium">{t(`providers.categories.${category.id}`)}</span>
-                                <Badge variant="secondary" className="ml-1 bg-white/30 text-white">
-                                    {category.count}
-                                </Badge>
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                </Tabs>
-            </div>
+            {/* Contenedor principal */}
+            <div className="space-y-4">
 
-            {/* Results Counter */}
-            <div className="flex justify-between items-center">
-                <p className="text-gray-600">
-                    {filteredVendors.length} {filteredVendors.length === 1
-                        ? t('providers.results.found_singular')
-                        : t('providers.results.found')}
-                </p>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                        setSearchQuery("")
-                        setSelectedCategory("all")
-                    }}
-                >
-                    {t('providers.clearFilters')}
-                </Button>
-            </div>
+                {/* Category Tabs */}
+                <div className="w-full my-8">
+                    <Tabs
+                        defaultValue="all"
+                        className="w-full"
+                        onValueChange={(value) => setSelectedCategory(value as VendorCategory)}
+                    >
+                        <TabsList className="flex flex-wrap gap-2 bg-transparent p-0">
+                            {categories.map((category) => {
+                                const isActive = category.id === selectedCategory;
+                                return (
+                                    <TabsTrigger
+                                        key={category.id}
+                                        value={category.id}
+                                        className={`
+                group flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200
+                ${isActive
+                                                ? 'bg-primary text-white shadow-md'
+                                                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                                            }
+                hover:shadow-sm active:scale-[0.98] min-w-fit
+              `}
+                                    >
+                                        {/* Icono */}
+                                        <div className={`
+                p-1.5 rounded-md
+                ${isActive ? 'bg-white/20' : 'bg-primary/10 text-primary'}
+              `}>
+                                            <span className="text-base">{category.icon}</span>
+                                        </div>
 
-            {/* Vendors Grid */}
-            {filteredVendors.length === 0 ? (
-                <div className="text-center py-12">
-                    <div className="text-gray-400 mb-4">
-                        <Search className="h-12 w-12 mx-auto" />
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2">{t('providers.results.none')}</h3>
-                    <p className="text-gray-500">{t('providers.results.noneDescription')}</p>
+                                        {/* Nombre */}
+                                        <span className="font-medium text-sm whitespace-nowrap">
+                                            {t(`providers.categories.${category.id}`)}
+                                        </span>
+
+                                        {/* Contador */}
+                                        <div className={`
+                px-2 py-0.5 rounded-full text-xs font-bold
+                ${isActive
+                                                ? 'bg-white/30 text-white'
+                                                : 'bg-primary/10 text-primary'
+                                            }
+              `}>
+                                            {category.count}
+                                        </div>
+                                    </TabsTrigger>
+                                );
+                            })}
+                        </TabsList>
+                    </Tabs>
                 </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredVendors.map((vendor, index) => (
-                        <motion.div
-                            key={vendor.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            <Card className={`h-full overflow-hidden hover-lift ${vendor.featured ? 'border-primary border-2' : ''}`}>
-                                {vendor.featured && (
-                                    <div className="absolute top-2 right-2 z-10">
-                                        <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                                            {t('providers.vendorCard.featured')}
-                                        </Badge>
-                                    </div>
-                                )}
 
-                                {/* Vendor Image */}
-                                <div
-                                    className="h-48 w-full bg-cover bg-center relative"
-                                    style={{ backgroundImage: `url(${vendor.image})` }}
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                                    <div className="absolute bottom-4 left-4">
-                                        <Badge className="bg-white/90 backdrop-blur-sm text-gray-800">
-                                            {vendor.subcategory}
-                                        </Badge>
-                                    </div>
-                                </div>
+                {/* Header de resultados */}
+                <div className="flex justify-between items-center my-14 bg-fuchsia-200/50 px-4 py-2 rounded-lg">
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-1">
+                            {t(`providers.categories.${selectedCategory}`)}
+                        </h2>
+                        <p className="text-gray-600 text-sm">
+                            {filteredVendors.length} {filteredVendors.length === 1
+                                ? t('providers.results.found_singular')
+                                : t('providers.results.found')}
+                            {selectedCategory !== 'all' && ` en ${t(`providers.categories.${selectedCategory}`)}`}
+                        </p>
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            setSearchQuery("")
+                            setSelectedCategory("all")
+                        }}
+                        className="whitespace-nowrap bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 border-transparent hover:border-primary/50 shadow-sm hover:shadow-md transition-all duration-200"
+                    >
+                        <X className="h-3 w-3 mr-1.5" />
+                        {t('providers.clearFilters')}
+                    </Button>
+                </div>
 
-                                <CardHeader className="pb-3">
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex-1 min-w-0">
-                                            <CardTitle className="text-lg font-heading truncate">{vendor.name}</CardTitle>
-                                            <CardDescription className="flex items-center gap-1 mt-1">
-                                                <MapPin className="h-3 w-3" />
-                                                <span className="text-sm truncate">{vendor.location}</span>
-                                            </CardDescription>
+                {/* Vendors Grid */}
+                {filteredVendors.length === 0 ? (
+                    <div className="text-center py-8 bg-gray-50 rounded-lg border">
+                        <div className="text-gray-400 mb-3">
+                            <Search className="h-10 w-10 mx-auto" />
+                        </div>
+                        <h3 className="text-base font-semibold mb-1">{t('providers.results.none')}</h3>
+                        <p className="text-gray-500 text-sm">{t('providers.results.noneDescription')}</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {filteredVendors.map((vendor, index) => (
+                            <motion.div
+                                key={vendor.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.05 }}
+                            >
+                                <Card className={`h-full overflow-hidden hover:shadow-md transition-shadow ${vendor.featured ? 'border-primary border' : ''}`}>
+                                    {vendor.featured && (
+                                        <div className="absolute top-2 right-2 z-10">
+                                            <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                                                {t('providers.vendorCard.featured')}
+                                            </Badge>
                                         </div>
-                                        <div className="flex items-center gap-1 ml-2">
-                                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                            <span className="font-semibold">{vendor.rating}</span>
-                                            <span className="text-gray-500 text-sm">({vendor.reviews})</span>
-                                        </div>
-                                    </div>
-                                </CardHeader>
+                                    )}
 
-                                <CardContent className="pb-3">
-                                    <p className="text-gray-600 text-sm line-clamp-2 mb-3">{vendor.description}</p>
-
-                                    {/* Price Range */}
-                                    <div className="flex items-center justify-between mb-3">
-                                        <Badge variant="outline" className="font-semibold">
-                                            {vendor.priceRange}
-                                        </Badge>
-                                        <span className="text-sm text-gray-500">{t('providers.vendorCard.priceRange')}</span>
-                                    </div>
-
-                                    {/* Services */}
-                                    <div className="space-y-2">
-                                        <p className="text-sm font-medium text-gray-700">{t('providers.vendorCard.services')}</p>
-                                        <div className="flex flex-wrap gap-1">
-                                            {vendor.services.slice(0, 3).map((service, idx) => (
-                                                <Badge key={idx} variant="secondary" className="text-xs">
-                                                    {service}
-                                                </Badge>
-                                            ))}
-                                            {vendor.services.length > 3 && (
-                                                // Change this line to use template literals instead:
-                                                <Badge variant="secondary" className="text-xs">
-                                                    {vendor.services.length > 3
-                                                        ? `+${vendor.services.length - 3} ${t('providers.vendorCard.moreServices')}`
-                                                        : ''}
-                                                </Badge>
-                                            )}
+                                    {/* Vendor Image */}
+                                    <div
+                                        className="h-40 w-full bg-cover bg-center relative"
+                                        style={{ backgroundImage: `url(${vendor.image})` }}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                        <div className="absolute bottom-3 left-3">
+                                            <Badge className="bg-white/90 text-gray-800 text-xs">
+                                                {vendor.subcategory}
+                                            </Badge>
                                         </div>
                                     </div>
-                                </CardContent>
 
-                                <CardFooter className="pt-3 border-t flex flex-col gap-3">
-                                    <div className="flex items-center gap-2 text-sm text-gray-600 w-full">
-                                        <Phone className="h-4 w-4" />
-                                        <span className="truncate">{vendor.contact.phone}</span>
-                                    </div>
+                                    <CardHeader className="pb-2">
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1 min-w-0">
+                                                <CardTitle className="text-base font-semibold truncate">{vendor.name}</CardTitle>
+                                                <CardDescription className="flex items-center gap-1 mt-1">
+                                                    <MapPin className="h-3 w-3" />
+                                                    <span className="text-xs truncate">{vendor.location}</span>
+                                                </CardDescription>
+                                            </div>
+                                            <div className="flex items-center gap-1 ml-2">
+                                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                                <span className="font-semibold text-sm">{vendor.rating}</span>
+                                                <span className="text-gray-500 text-xs">({vendor.reviews})</span>
+                                            </div>
+                                        </div>
+                                    </CardHeader>
 
-                                    <div className="flex gap-2 w-full">
-                                        <Button
-                                            size="sm"
-                                            className="flex-1 gradient-royal hover:glow-primary transition-all duration-300"
-                                            onClick={() => window.open(`tel:${vendor.contact.phone}`)}
-                                        >
-                                            {t('providers.vendorCard.call')}
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            className="flex-1"
-                                            onClick={() => window.open(`mailto:${vendor.contact.email}`)}
-                                        >
-                                            <Mail className="h-4 w-4 mr-1" />
-                                            {t('providers.vendorCard.email')}
-                                        </Button>
-                                        {vendor.contact.website && (
+                                    <CardContent className="pb-2">
+                                        <p className="text-gray-600 text-xs line-clamp-2 mb-2">{vendor.description}</p>
+
+                                        {/* Price Range */}
+                                        <div className="flex items-center justify-between mb-2">
+                                            <Badge variant="outline" className="text-xs font-medium">
+                                                {vendor.priceRange}
+                                            </Badge>
+                                            <span className="text-xs text-gray-500">{t('providers.vendorCard.priceRange')}</span>
+                                        </div>
+
+                                        {/* Services */}
+                                        <div className="space-y-1">
+                                            <p className="text-xs font-medium text-gray-700">{t('providers.vendorCard.services')}</p>
+                                            <div className="flex flex-wrap gap-1">
+                                                {vendor.services.slice(0, 3).map((service, idx) => (
+                                                    <Badge key={idx} variant="secondary" className="text-xs py-0">
+                                                        {service}
+                                                    </Badge>
+                                                ))}
+                                                {vendor.services.length > 3 && (
+                                                    <Badge variant="secondary" className="text-xs py-0">
+                                                        +{vendor.services.length - 3}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+
+                                    <CardFooter className="pt-2 border-t flex flex-col gap-2">
+                                        <div className="flex items-center gap-2 text-xs text-gray-600 w-full">
+                                            <Phone className="h-3 w-3" />
+                                            <span className="truncate">{vendor.contact.phone}</span>
+                                        </div>
+
+                                        <div className="flex gap-2 w-full">
                                             <Button
                                                 size="sm"
-                                                variant="ghost"
-                                                onClick={() => window.open(vendor.contact.website, '_blank')}
+                                                className="flex-1 text-xs h-8"
+                                                onClick={() => window.open(`tel:${vendor.contact.phone}`)}
                                             >
-                                                <Globe className="h-4 w-4" />
+                                                {t('providers.vendorCard.call')}
                                             </Button>
-                                        )}
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        </motion.div>
-                    ))}
-                </div>
-            )}
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="flex-1 text-xs h-8"
+                                                onClick={() => window.open(`mailto:${vendor.contact.email}`)}
+                                            >
+                                                <Mail className="h-3 w-3 mr-1" />
+                                                {t('providers.vendorCard.email')}
+                                            </Button>
+                                            {vendor.contact.website && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="h-8 w-8 p-0"
+                                                    onClick={() => window.open(vendor.contact.website, '_blank')}
+                                                >
+                                                    <Globe className="h-3 w-3" />
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             {/* Statistics Section */}
             <Card className="mt-8">
@@ -616,7 +658,7 @@ export default function VendorsPage() {
             </Card>
 
             {/* Call to Action */}
-            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            {/* <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
                 <CardContent className="p-6 text-center">
                     <h3 className="text-xl font-heading font-bold mb-2">{t('providers.joinPrompt')}</h3>
                     <p className="text-gray-600 mb-4">
@@ -631,7 +673,7 @@ export default function VendorsPage() {
                         </Button>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> */}
         </div>
     )
 }
