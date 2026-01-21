@@ -234,7 +234,7 @@ export function EnhancedEventDashboard() {
   }
 
   return (
-    <div className="w-full space-y-4 rounded-lg border-2 sm:space-y-6 md:space-y-8 p-3 sm:p-4 md:p-6 bg-gradient-to-b from-indigo-200/50 via-indigo-300/60 to-indigo-400/5  shadow-lg sm:shadow-xl relative overflow-hidden">
+    <div className="w-full space-y-4 rounded-lg border-2 sm:space-y-6 md:space-y-8 p-3 sm:p-4 md:p-6 bg-gradient-to-b from-indigo-200/25 via-indigo-300/15 to-indigo-400/25  shadow-lg sm:shadow-xl relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-5 w-48 h-48 sm:w-72 sm:h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
