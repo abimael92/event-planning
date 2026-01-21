@@ -1,6 +1,6 @@
 {
   "name": "event-planning",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "private": true,
   "scripts": {
     "build": "next build",

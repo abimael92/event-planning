@@ -427,7 +427,7 @@ export default function VendorsPage() {
             <div className="space-y-4">
 
                 {/* Category Tabs */}
-                <div className="w-full my-8">
+                <div className="w-full !my-8">
                     <Tabs
                         defaultValue="all"
                         className="w-full"
@@ -480,7 +480,7 @@ export default function VendorsPage() {
                 </div>
 
                 {/* Header de resultados */}
-                <div className="flex justify-between items-center my-14 bg-fuchsia-200/50 px-4 py-2 rounded-lg">
+                <div className="flex justify-between items-center !my-16 bg-fuchsia-200/50 px-4 py-2 rounded-lg">
                     <div>
                         <h2 className="text-xl font-bold text-gray-800 mb-1">
                             {t(`providers.categories.${selectedCategory}`)}
