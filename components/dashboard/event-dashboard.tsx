@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress"
 import { Plus, Calendar, DollarSign, Users, TrendingUp } from "lucide-react"
 import { EventCard } from "./event-card"
 import { CreateEventModal } from "./create-event-modal"
+import { StatsCard } from '../ui/stats-card'
 // import { StatsCard } from "./stats-card"
 
 // Mock data
