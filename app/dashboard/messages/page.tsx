@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Search, Send, Paperclip, Smile, CheckCheck, Clock, MoreVertical, Phone, Video } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
-import { DashboardLayout } from "@/components/layout/dashboard-layout"
+import { DashboardLayout } from "app/dashboard/_components/dashboard-layout"
 import { ChatInterface } from "@/components/chat/chat-interface"
 import { ProtectedRoute } from "@/components/auth/protected-route"
 
@@ -75,9 +75,7 @@ export default function MessagesPage() {
   }
   
   return (
-    <ProtectedRoute>
-        <div className="h-full">
-          <DashboardLayout>
+
             <div className="w-full h-[calc(100vh-8rem)] p-4 md:p-6 overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
                 {/* Conversations List */}
@@ -224,9 +222,7 @@ export default function MessagesPage() {
                 </Card>
               </div>
             </div>
-          </DashboardLayout>
-        </div>
-    </ProtectedRoute>
+    
   )
 }
 

@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { DollarSign, CreditCard, Calendar, CheckCircle, Clock, AlertCircle, TrendingUp, Download, Filter } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
-import { DashboardLayout } from "@/components/layout/dashboard-layout"
+import { DashboardLayout } from "app/dashboard/_components/dashboard-layout"
 
 const mockPayments = [
     {
@@ -92,9 +92,8 @@ export default function PaymentsPage() {
     }
 
     return (
-        <DashboardLayout>
             <div className="w-full space-y-6 p-4 md:p-6 overflow-x-hidden">
-            
+
                 {/* Hero Section */}
                 <div className="relative overflow-hidden rounded-lg md:rounded-xl p-4 md:p-6 lg:p-8 w-full animate-gradient-shift">
                     <div className="relative z-10 text-white w-full">
@@ -298,6 +297,5 @@ export default function PaymentsPage() {
                     </TabsContent>
                 </Tabs>
             </div>
-        </DashboardLayout>
     )
 }
