@@ -1,15 +1,11 @@
+// app/vendor/page.tsx
 "use client"
 
-import { VendorDashboard } from "@/components/vendor-dashboard/vendor-dashboard"
-import { VendorLayout } from "@/components/layout/vendor-layout"
-import { ProtectedRoute } from "@/components/auth/protected-route"
+
+import { VendorDashboard } from "@/components/dashboard/vendors/page"
+
+
 
 export default function VendorsPage() {
-    return (
-        <ProtectedRoute>
-            <VendorLayout>
-                <VendorDashboard />
-            </VendorLayout>
-        </ProtectedRoute>
-    )
+    return <VendorDashboard />
 }

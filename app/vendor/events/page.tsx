@@ -2,7 +2,7 @@
 "use client"
 
 import { useState } from "react"
-import { EventsList } from "@/components/vendors/events"
+// import { EventsList } from "@/components/vendors/events"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -67,10 +67,10 @@ export default function VendorEventsPage() {
                 </Select>
             </div>
 
-            <EventsList
+            {/* <EventsList
                 search={search}
                 statusFilter={statusFilter}
-            />
+            /> */}
         </div>
     )
 }
