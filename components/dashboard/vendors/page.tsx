@@ -1,732 +1,1250 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import {
+    Calendar, DollarSign, Users, TrendingUp, CheckCircle,
+    Mail, FileText, Clock, Target, Star, TrendingDown,
+    Package, Image, Video, MessageSquare, Settings,
+    ChevronRight, MoreVertical, Download, Share2,
+    BellRing, CalendarDays, Gift, Trophy, Sparkles,
+    BarChart3, PieChart, Filter, RefreshCw, Eye,
+    X, Check, Edit, Trash2, Plus
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    Card, CardHeader, CardTitle, CardDescription,
+    CardContent, CardFooter
+} from "@/components/ui/card"
+import {
+    Tabs, TabsContent, TabsList, TabsTrigger
+} from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Search, Star, MapPin, Phone, Mail, Globe, Music, Flower, Utensils, Home, Camera, Car, Cake, X } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Progress } from "@/components/ui/progress"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Switch } from "@/components/ui/switch"
+import { Separator } from "@/components/ui/separator"
 import { useTranslation } from "@/hooks/use-translation"
+import { toast } from "sonner"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
-// Types for vendors with English keys
-type VendorCategory =
-    | "music"
-    | "decoration"
-    | "food"
-    | "venues"
-    | "photography"
-    | "transportation"
-    | "entertainment"
-    | "all"
-
-interface Vendor {
+// Mock data types
+interface Event {
     id: string
-    name: string
-    category: VendorCategory
-    subcategory: string
+    title: string
+    client: string
+    date: string
+    time: string
+    status: 'confirmed' | 'pending' | 'completed' | 'cancelled'
+    revenue: number
+    type: string
+    progress: number
+}
+
+interface Payment {
+    id: string
+    amount: number
+    client: string
+    date: string
+    status: 'paid' | 'pending' | 'overdue'
+    method: string
+}
+
+interface PerformanceMetric {
+    label: string
+    value: number
+    change: number
+    target: number
+    color: string
+}
+
+interface QuickLink {
+    label: string
+    icon: React.ElementType
+    href: string
+    color: string
     description: string
-    rating: number
-    reviews: number
-    location: string
-    contact: {
-        phone: string
-        email: string
-        website?: string
-    }
-    priceRange: string
-    image: string
-    featured?: boolean
-    services: string[]
 }
 
-const chihuahuaVendors: Vendor[] = [
-    // Music vendors
-    {
-        id: "1",
-        name: "Mariachi Los Chihuahuenses",
-        category: "music",
-        subcategory: "Mariachi",
-        description: "Mariachi tradicional de Chihuahua con más de 20 años de experiencia en eventos sociales.",
-        rating: 4.8,
-        reviews: 124,
-        location: "Centro, Chihuahua",
-        contact: {
-            phone: "+52 614 123 4567",
-            email: "mariachi@chihuahua.com",
-            website: "www.mariachichihuahua.com"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=300&fit=crop",
-        featured: true,
-        services: ["Música en vivo", "Serenatas", "Repertorio tradicional", "Grupo completo"]
-    },
-    {
-        id: "2",
-        name: "DJ Electro Norte",
-        category: "music",
-        subcategory: "DJ",
-        description: "DJ especializado en eventos sociales con equipo de última generación y amplia biblioteca musical.",
-        rating: 4.6,
-        reviews: 89,
-        location: "Zona Dorada, Chihuahua",
-        contact: {
-            phone: "+52 614 234 5678",
-            email: "dj@electronorte.com",
-            website: "www.electronorte.com"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=300&fit=crop",
-        services: ["Música electrónica", "Música popular", "Efectos de luz", "Karaoke"]
-    },
-    {
-        id: "3",
-        name: "Banda Los Norteños",
-        category: "music",
-        subcategory: "Banda",
-        description: "Banda norteña con los mejores éxitos regionales para animar tu evento.",
-        rating: 4.7,
-        reviews: 156,
-        location: "Campus UACH, Chihuahua",
-        contact: {
-            phone: "+52 614 345 6789",
-            email: "contacto@bandanorteña.com"
-        },
-        priceRange: "$$$",
-        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w-400&h=300&fit=crop",
-        services: ["Música norteña", "Grupo completo", "Show en vivo", "Música para bodas"]
-    },
-
-    // Decoration vendors
-    {
-        id: "4",
-        name: "Decoraciones Elegantes Chihuahua",
-        category: "decoration",
-        subcategory: "Decoración de Eventos",
-        description: "Decoración profesional para todo tipo de eventos con diseños personalizados.",
-        rating: 4.9,
-        reviews: 203,
-        location: "Zona Tecnológico, Chihuahua",
-        contact: {
-            phone: "+52 614 456 7890",
-            email: "decoracion@elegantes.com",
-            website: "www.decorelegantechihuahua.com"
-        },
-        priceRange: "$$$",
-        image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&h=300&fit=crop",
-        featured: true,
-        services: ["Decoración floral", "Centros de mesa", "Arcos decorativos", "Iluminación especial"]
-    },
-    {
-        id: "5",
-        name: "Flores del Desierto",
-        category: "decoration",
-        subcategory: "Florería",
-        description: "Arreglos florales únicos con flores de temporada y diseños exclusivos.",
-        rating: 4.7,
-        reviews: 178,
-        location: "Campo Bello, Chihuahua",
-        contact: {
-            phone: "+52 614 567 8901",
-            email: "flores@desierto.com",
-            website: "www.floresdeldesierto.com"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1560185007-cde436f5a827?w=400&h=300&fit=crop",
-        services: ["Ramos de novia", "Centros de mesa", "Decoración floral", "Arreglos personalizados"]
-    },
-
-    // Food vendors
-    {
-        id: "6",
-        name: "Banquetes La Casona",
-        category: "food",
-        subcategory: "Catering",
-        description: "Servicio de catering gourmet especializado en cocina mexicana e internacional.",
-        rating: 4.8,
-        reviews: 245,
-        location: "Centro Histórico, Chihuahua",
-        contact: {
-            phone: "+52 614 678 9012",
-            email: "info@lacasona.com",
-            website: "www.banqueteslacasona.com"
-        },
-        priceRange: "$$$",
-        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
-        featured: true,
-        services: ["Buffet", "Plato fuerte", "Postres", "Bebidas", "Meseros"]
-    },
-    {
-        id: "7",
-        name: "Tacos Don Chuy",
-        category: "food",
-        subcategory: "Food Truck",
-        description: "Tacos norteños auténticos para eventos informales y celebraciones al aire libre.",
-        rating: 4.5,
-        reviews: 312,
-        location: "Periférico de la Juventud, Chihuahua",
-        contact: {
-            phone: "+52 614 789 0123",
-            email: "tacos@donchuy.com"
-        },
-        priceRange: "$",
-        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop",
-        services: ["Tacos", "Quesadillas", "Bebidas", "Salsas tradicionales"]
-    },
-
-    // Locations vendors
-    {
-        id: "8",
-        name: "Salón Los Arcos",
-        category: "venues",
-        subcategory: "Salón de Eventos",
-        description: "Salón elegante para bodas, quinceañeras y eventos corporativos con capacidad para 500 personas.",
-        rating: 4.9,
-        reviews: 189,
-        location: "Zona Norte, Chihuahua",
-        contact: {
-            phone: "+52 614 890 1234",
-            email: "reservaciones@salonlosarcos.com",
-            website: "www.salonlosarcoschihuahua.com"
-        },
-        priceRange: "$$$$",
-        image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop",
-        featured: true,
-        services: ["Espacio completo", "Mobiliario", "Sonido básico", "Estacionamiento", "Coordinador de eventos"]
-    },
-    {
-        id: "9",
-        name: "Iglesia San Francisco",
-        category: "venues",
-        subcategory: "Iglesia",
-        description: "Hermosa iglesia histórica para todo tipo de ceremonias religiosas.",
-        rating: 4.7,
-        reviews: 95,
-        location: "Centro, Chihuahua",
-        contact: {
-            phone: "+52 614 901 2345",
-            email: "iglesia@sanfranciscochihuahua.org"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1544830288-5a5297964c96?w=400&h=300&fit=crop",
-        services: ["Ceremonias religiosas", "Capilla", "Coro", "Servicios adicionales"]
-    },
-    {
-        id: "10",
-        name: "Jardines del Parque",
-        category: "venues",
-        subcategory: "Jardines",
-        description: "Jardines naturales para eventos al aire libre con vistas panorámicas.",
-        rating: 4.6,
-        reviews: 134,
-        location: "Zona Poniente, Chihuahua",
-        contact: {
-            phone: "+52 614 012 3456",
-            email: "eventos@jardinesdelparque.com"
-        },
-        priceRange: "$$$",
-        image: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=400&h=300&fit=crop",
-        services: ["Espacio abierto", "Área de juegos", "Zona de alimentos", "Estacionamiento"]
-    },
-
-    // Photography vendors
-    {
-        id: "11",
-        name: "Fotografía Memoria Viva",
-        category: "photography",
-        subcategory: "Fotografía",
-        description: "Fotógrafos profesionales especializados en capturar los momentos más importantes de tu evento.",
-        rating: 4.9,
-        reviews: 287,
-        location: "Zona Dorada, Chihuahua",
-        contact: {
-            phone: "+52 614 123 7890",
-            email: "fotos@memoriaviva.com",
-            website: "www.memoriavivafotos.com"
-        },
-        priceRange: "$$$",
-        image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=400&h=300&fit=crop",
-        featured: true,
-        services: ["Fotografía digital", "Álbumes", "Video profesional", "Sesiones previas", "Fotos instantáneas"]
-    },
-
-    // Transportation vendors
-    {
-        id: "12",
-        name: "Transporte Elegante Chihuahua",
-        category: "transportation",
-        subcategory: "Transporte",
-        description: "Flotilla de vehículos de lujo para transportar a los invitados de tu evento.",
-        rating: 4.5,
-        reviews: 167,
-        location: "Aeropuerto, Chihuahua",
-        contact: {
-            phone: "+52 614 234 8901",
-            email: "reservaciones@transporteelegante.com"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop",
-        services: ["Limoninas", "Autobuses", "Chofer profesional", "Decoración de vehículos"]
-    },
-
-    // Entertainment vendors
-    {
-        id: "13",
-        name: "Show de Magia Chihuahua",
-        category: "entertainment",
-        subcategory: "Espectáculos",
-        description: "Magos profesionales para entretener a niños y adultos en tu evento.",
-        rating: 4.8,
-        reviews: 142,
-        location: "Centro, Chihuahua",
-        contact: {
-            phone: "+52 614 345 9012",
-            email: "magia@showchihuahua.com"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=400&h=300&fit=crop",
-        services: ["Show de magia", "Interactivo", "Todas las edades", "Duración flexible"]
-    },
-    {
-        id: "14",
-        name: "Pastelería Dulce Sabor",
-        category: "food",
-        subcategory: "Repostería",
-        description: "Pasteles personalizados para bodas, quinceañeras y eventos especiales.",
-        rating: 4.9,
-        reviews: 198,
-        location: "Zona Tecnológico, Chihuahua",
-        contact: {
-            phone: "+52 614 456 0123",
-            email: "pedidos@dulcesabor.com",
-            website: "www.dulcesaborchihuahua.com"
-        },
-        priceRange: "$$",
-        image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=300&fit=crop",
-        services: ["Pasteles de boda", "Postres individuales", "Diseños personalizados", "Entrega a domicilio"]
-    }
-]
-
-const categoryIcons: Record<VendorCategory, React.ReactNode> = {
-    music: <Music className="h-5 w-5" />,
-    decoration: <Flower className="h-5 w-5" />,
-    food: <Utensils className="h-5 w-5" />,
-    venues: <Home className="h-5 w-5" />,
-    photography: <Camera className="h-5 w-5" />,
-    transportation: <Car className="h-5 w-5" />,
-    entertainment: <Music className="h-5 w-5" />,
-    all: <Star className="h-5 w-5" />
+interface Notification {
+    id: string
+    title: string
+    description: string
+    time: string
+    type: 'success' | 'info' | 'warning' | 'error'
+    read: boolean
 }
 
-export default function VendorsPage() {
+export function VendorDashboard() {
+    const [vendorName] = useState("Sorpresas")
+    const [activeTab, setActiveTab] = useState("overview")
+    const [events, setEvents] = useState<Event[]>([])
+    const [payments, setPayments] = useState<Payment[]>([])
+    const [loading, setLoading] = useState(true)
+    const [notifications, setNotifications] = useState<Notification[]>([
+        {
+            id: '1',
+            title: 'Booking Confirmed',
+            description: 'Corporate Gala has been confirmed by the client',
+            time: '2 hours ago',
+            type: 'success',
+            read: false
+        },
+        {
+            id: '2',
+            title: 'Payment Received',
+            description: 'Payment of $9,200 has been processed',
+            time: '1 day ago',
+            type: 'success',
+            read: false
+        },
+        {
+            id: '3',
+            title: 'Review Submitted',
+            description: 'Client left a 5-star review for your service',
+            time: '2 days ago',
+            type: 'info',
+            read: false
+        }
+    ])
+
+    const [showNotifications, setShowNotifications] = useState(false)
+    const [showCreateEvent, setShowCreateEvent] = useState(false)
+    const [newEvent, setNewEvent] = useState({
+        title: '',
+        client: '',
+        date: '',
+        time: '',
+        type: 'corporate',
+        revenue: 0
+    })
+
     const { t } = useTranslation()
-    const [searchQuery, setSearchQuery] = useState("")
-    const [selectedCategory, setSelectedCategory] = useState<VendorCategory>("all")
-    const [filteredVendors, setFilteredVendors] = useState<Vendor[]>(chihuahuaVendors)
 
+    // Load mock data
     useEffect(() => {
-        let results = chihuahuaVendors
+        const loadMockData = () => {
+            setEvents([
+                {
+                    id: '1',
+                    title: 'Gala Corporativa Soles de Chihuahua',
+                    client: 'Grupo Industrial Chihuahua S.A.',
+                    date: '2024-12-20',
+                    time: '19:00',
+                    status: 'confirmed',
+                    revenue: 18500,
+                    type: 'corporate',
+                    progress: 75
+                },
+                {
+                    id: '2',
+                    title: 'Boda Tradicional Chihuahuense',
+                    client: 'Familia Rodríguez-González',
+                    date: '2024-12-22',
+                    time: '16:30',
+                    status: 'pending',
+                    revenue: 32500,
+                    type: 'wedding',
+                    progress: 40
+                },
+                {
+                    id: '3',
+                    title: 'XV Años de Valeria',
+                    client: 'Familia Martínez',
+                    date: '2024-12-18',
+                    time: '14:00',
+                    status: 'confirmed',
+                    revenue: 18200,
+                    type: 'quinceañera',
+                    progress: 90
+                },
+                {
+                    id: '4',
+                    title: 'Posada Empresarial Navideña',
+                    client: 'Cámara de Comercio de Chihuahua',
+                    date: '2024-12-25',
+                    time: '18:00',
+                    status: 'pending',
+                    revenue: 29500,
+                    type: 'corporate',
+                    progress: 20
+                },
+                {
+                    id: '5',
+                    title: 'Graduación ITCH II',
+                    client: 'Instituto Tecnológico de Chihuahua II',
+                    date: '2024-12-28',
+                    time: '17:00',
+                    status: 'confirmed',
+                    revenue: 12500,
+                    type: 'graduation',
+                    progress: 60
+                },
+                {
+                    id: '6',
+                    title: 'Boda en Hacienda San Marcos',
+                    client: 'Carlos y Fernanda',
+                    date: '2024-12-30',
+                    time: '15:00',
+                    status: 'pending',
+                    revenue: 42800,
+                    type: 'wedding',
+                    progress: 30
+                },
+            ])
 
-        // Filter by category
-        if (selectedCategory !== "all") {
-            results = results.filter(vendor => vendor.category === selectedCategory)
+            setPayments([
+                {
+                    id: '1',
+                    amount: 9200,
+                    client: 'Familia Martínez',
+                    date: '2024-12-15',
+                    status: 'paid',
+                    method: 'Transferencia Bancaria'
+                },
+                {
+                    id: '2',
+                    amount: 16250,
+                    client: 'Grupo Industrial Chihuahua S.A.',
+                    date: '2024-12-14',
+                    status: 'pending',
+                    method: 'Transferencia Bancaria'
+                },
+                {
+                    id: '3',
+                    amount: 8500,
+                    client: 'Familia Rodríguez-González',
+                    date: '2024-12-10',
+                    status: 'paid',
+                    method: 'Tarjeta de Crédito'
+                },
+                {
+                    id: '4',
+                    amount: 13800,
+                    client: 'Cámara de Comercio de Chihuahua',
+                    date: '2024-12-05',
+                    status: 'overdue',
+                    method: 'Transferencia Bancaria'
+                },
+                {
+                    id: '5',
+                    amount: 6250,
+                    client: 'Instituto Tecnológico de Chihuahua II',
+                    date: '2024-12-03',
+                    status: 'paid',
+                    method: 'Depósito en Efectivo'
+                },
+                {
+                    id: '6',
+                    amount: 21400,
+                    client: 'Carlos y Fernanda',
+                    date: '2024-11-28',
+                    status: 'paid',
+                    method: 'Tarjeta de Crédito'
+                },
+            ])
+
+            setLoading(false)
         }
 
-        // Filter by search query
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase()
-            results = results.filter(vendor =>
-                vendor.name.toLowerCase().includes(query) ||
-                vendor.description.toLowerCase().includes(query) ||
-                vendor.services.some(service => service.toLowerCase().includes(query)) ||
-                vendor.subcategory.toLowerCase().includes(query)
-            )
-        }
+        setTimeout(loadMockData, 1000)
+    }, [])
 
-        // Sort: featured first, then by rating
-        results.sort((a, b) => {
-            if (a.featured && !b.featured) return -1
-            if (!a.featured && b.featured) return 1
-            return b.rating - a.rating
-        })
+    // Calculate stats dynamically
+    const stats = {
+        activeBookings: events.filter(e => e.status === 'confirmed' || e.status === 'pending').length,
+        totalRevenue: events.reduce((sum, event) => sum + event.revenue, 0),
+        upcomingEvents: events.filter(e => e.status === 'confirmed' || e.status === 'pending').length,
+        satisfactionRate: 98,
+        monthlyGrowth: 32,
+        completionRate: 92,
+    }
 
-        setFilteredVendors(results)
-    }, [searchQuery, selectedCategory])
-
-    const categories: { id: VendorCategory; count: number; icon: React.ReactNode; description?: string }[] = [
-        { id: "all", count: chihuahuaVendors.length, icon: categoryIcons.all },
-        { id: "music", count: chihuahuaVendors.filter(v => v.category === "music").length, icon: categoryIcons.music },
-        { id: "decoration", count: chihuahuaVendors.filter(v => v.category === "decoration").length, icon: categoryIcons.decoration },
-        { id: "food", count: chihuahuaVendors.filter(v => v.category === "food").length, icon: categoryIcons.food },
-        { id: "venues", count: chihuahuaVendors.filter(v => v.category === "venues").length, icon: categoryIcons.venues },
-        { id: "photography", count: chihuahuaVendors.filter(v => v.category === "photography").length, icon: categoryIcons.photography },
-        { id: "transportation", count: chihuahuaVendors.filter(v => v.category === "transportation").length, icon: categoryIcons.transportation },
-        { id: "entertainment", count: chihuahuaVendors.filter(v => v.category === "entertainment").length, icon: categoryIcons.entertainment }
+    const performanceMetrics: PerformanceMetric[] = [
+        {
+            label: t('vendorDashboard.metrics.bookingRate'),
+            value: 92,
+            change: 18,
+            target: 95,
+            color: 'from-purple-500 to-pink-500'
+        },
+        {
+            label: t('vendorDashboard.metrics.revenueGrowth'),
+            value: 88,
+            change: 32,
+            target: 85,
+            color: 'from-blue-500 to-cyan-500'
+        },
+        {
+            label: t('vendorDashboard.metrics.clientSatisfaction'),
+            value: 98,
+            change: 7,
+            target: 96,
+            color: 'from-green-500 to-emerald-500'
+        },
+        {
+            label: t('vendorDashboard.metrics.responseTime'),
+            value: 94,
+            change: -1,
+            target: 95,
+            color: 'from-amber-500 to-orange-500'
+        },
     ]
 
-    return (
-        <div className="w-full space-y-6 p-4 md:p-6 lg:p-8 overflow-x-hidden">
-            {/* Hero Section */}
-            <div className="relative overflow-hidden rounded-xl p-6 md:p-8 animate-gradient-shift">
-                <div className="relative z-10 text-white">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold mb-3">
-                            {t('providers.title')}
-                        </h1>
-                        <p className="text-white/80 text-base md:text-lg mb-6 max-w-2xl">
-                            {t('providers.subtitle')}
-                        </p>
-                    </motion.div>
+    const quickLinks: QuickLink[] = [
+        {
+            label: t('vendorDashboard.quickLinks.createPackage'),
+            icon: Package,
+            href: '/vendor/packages/create',
+            color: 'from-purple-500 to-pink-500',
+            description: t('vendorDashboard.quickLinks.createPackageDesc')
+        },
+        {
+            label: t('vendorDashboard.quickLinks.uploadPortfolio'),
+            icon: Image,
+            href: '/vendor/portfolio',
+            color: 'from-blue-500 to-cyan-500',
+            description: t('vendorDashboard.quickLinks.uploadPortfolioDesc')
+        },
+        {
+            label: t('vendorDashboard.quickLinks.manageCalendar'),
+            icon: CalendarDays,
+            href: '/vendor/calendar',
+            color: 'from-green-500 to-emerald-500',
+            description: t('vendorDashboard.quickLinks.manageCalendarDesc')
+        },
+        {
+            label: t('vendorDashboard.quickLinks.clientFeedback'),
+            icon: MessageSquare,
+            href: '/vendor/feedback',
+            color: 'from-amber-500 to-orange-500',
+            description: t('vendorDashboard.quickLinks.clientFeedbackDesc')
+        },
+    ]
+
+    // Helper functions
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 0,
+        }).format(amount)
+    }
+
+    const getEventTypeDisplay = (type: string) => {
+        const eventTypes: Record<string, string> = {
+            'corporate': 'Corporativo',
+            'wedding': 'Boda',
+            'quinceañera': 'XV Años',
+            'graduation': 'Graduación',
+            'charity': 'Benéfico',
+            'birthday': 'Cumpleaños',
+            'anniversary': 'Aniversario',
+            'baby': 'Baby Shower'
+        }
+        return eventTypes[type] || type
+    }
+
+    const getStatusColor = (status: string) => {
+        const statusColors = {
+            'confirmed': 'bg-green-100 text-green-800 border-green-200',
+            'pending': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+            'completed': 'bg-blue-100 text-blue-800 border-blue-200',
+            'cancelled': 'bg-red-100 text-red-800 border-red-200',
+            'paid': 'bg-green-100 text-green-800',
+            'overdue': 'bg-red-100 text-red-800'
+        }
+        return statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+
+    const getStatusText = (status: string) => {
+        return t(`common.status.${status}`) || status
+    }
+
+    // Event handlers
+    const handleRefreshData = () => {
+        setLoading(true)
+        setTimeout(() => {
+            toast.success(t('common.success'), {
+                description: "Dashboard data refreshed successfully"
+            })
+            setLoading(false)
+        }, 800)
+    }
+
+    const handleExportReport = () => {
+        toast.info(t('common.info'), {
+            description: "Exporting monthly report...",
+            duration: 3000,
+            action: {
+                label: "Download",
+                onClick: () => console.log("Downloading report...")
+            }
+        })
+    }
+
+    const handleCreateEvent = () => {
+        if (!newEvent.title || !newEvent.client || !newEvent.date || !newEvent.time) {
+            toast.error("Please fill in all required fields")
+            return
+        }
+
+        const event: Event = {
+            id: Date.now().toString(),
+            title: newEvent.title,
+            client: newEvent.client,
+            date: newEvent.date,
+            time: newEvent.time,
+            status: 'pending',
+            revenue: newEvent.revenue,
+            type: newEvent.type,
+            progress: 10
+        }
+
+        setEvents(prev => [event, ...prev])
+        setShowCreateEvent(false)
+        setNewEvent({
+            title: '',
+            client: '',
+            date: '',
+            time: '',
+            type: 'corporate',
+            revenue: 0
+        })
+
+        toast.success("Event created successfully!", {
+            description: `${newEvent.title} has been added to your events`
+        })
+    }
+
+    const handleUpdateEventStatus = (eventId: string, newStatus: Event['status']) => {
+        setEvents(prev => prev.map(event =>
+            event.id === eventId ? { ...event, status: newStatus } : event
+        ))
+
+        toast.info("Event status updated", {
+            description: `Event status changed to ${newStatus}`
+        })
+    }
+
+    const handleDeleteEvent = (eventId: string) => {
+        setEvents(prev => prev.filter(event => event.id !== eventId))
+        toast.warning("Event deleted", {
+            description: "Event has been removed from your list"
+        })
+    }
+
+    const handleMarkAllAsRead = () => {
+        setNotifications(prev => prev.map(notification => ({
+            ...notification,
+            read: true
+        })))
+        toast.info("All notifications marked as read")
+    }
+
+    const handleProcessPayment = (paymentId: string) => {
+        setPayments(prev => prev.map(payment =>
+            payment.id === paymentId ? { ...payment, status: 'paid' } : payment
+        ))
+        toast.success("Payment processed", {
+            description: "Payment status updated to paid"
+        })
+    }
+
+    const unreadNotifications = notifications.filter(n => !n.read).length
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 p-6 space-y-6">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Skeleton className="h-8 w-48" />
+                        <Skeleton className="h-4 w-64 mt-2" />
+                    </div>
+                    <Skeleton className="h-10 w-32" />
                 </div>
 
-                {/* Background particles */}
-                <div className="absolute inset-0 overflow-hidden">
-                    {[...Array(15)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="absolute w-1.5 h-1.5 bg-white/30 rounded-full"
-                            style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
-                            }}
-                            animate={{
-                                y: [0, -20, 0],
-                                opacity: [0.2, 0.6, 0.2],
-                            }}
-                            transition={{
-                                duration: 3 + Math.random() * 2,
-                                repeat: Number.POSITIVE_INFINITY,
-                                delay: Math.random() * 2,
-                            }}
-                        />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[...Array(4)].map((_, i) => (
+                        <Skeleton key={i} className="h-32 rounded-xl" />
                     ))}
                 </div>
-            </div>
 
-            {/* Search Bar */}
-            <div className="relative">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <Input
-                        type="search"
-                        placeholder={t('providers.searchPlaceholder')}
-                        className="pl-10 pr-4 py-6 text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-0 shadow-sm"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <Skeleton className="h-96 rounded-xl lg:col-span-2" />
+                    <Skeleton className="h-96 rounded-xl" />
                 </div>
             </div>
+        )
+    }
 
-            {/* Contenedor principal */}
-            <div className="space-y-4">
-
-                {/* Category Tabs */}
-                <div className="w-full !my-8">
-                    <Tabs
-                        defaultValue="all"
-                        className="w-full"
-                        onValueChange={(value) => setSelectedCategory(value as VendorCategory)}
-                    >
-                        <TabsList className="flex flex-wrap gap-2 bg-transparent p-0">
-                            {categories.map((category) => {
-                                const isActive = category.id === selectedCategory;
-                                return (
-                                    <TabsTrigger
-                                        key={category.id}
-                                        value={category.id}
-                                        className={`
-                group flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200
-                ${isActive
-                                                ? 'bg-primary text-white shadow-md'
-                                                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-                                            }
-                hover:shadow-sm active:scale-[0.98] min-w-fit
-              `}
-                                    >
-                                        {/* Icono */}
-                                        <div className={`
-                p-1.5 rounded-md
-                ${isActive ? 'bg-white/20' : 'bg-primary/10 text-primary'}
-              `}>
-                                            <span className="text-base">{category.icon}</span>
-                                        </div>
-
-                                        {/* Nombre */}
-                                        <span className="font-medium text-sm whitespace-nowrap">
-                                            {t(`providers.categories.${category.id}`)}
-                                        </span>
-
-                                        {/* Contador */}
-                                        <div className={`
-                px-2 py-0.5 rounded-full text-xs font-bold
-                ${isActive
-                                                ? 'bg-white/30 text-white'
-                                                : 'bg-primary/10 text-primary'
-                                            }
-              `}>
-                                            {category.count}
-                                        </div>
-                                    </TabsTrigger>
-                                );
-                            })}
-                        </TabsList>
-                    </Tabs>
-                </div>
-
-                {/* Header de resultados */}
-                <div className="flex justify-between items-center !my-16 bg-fuchsia-200/50 px-4 py-2 rounded-lg">
+    return (
+        <TooltipProvider>
+            <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/10 p-4 sm:p-6 space-y-6 sm:space-y-8">
+                {/* Header with Actions */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                >
                     <div>
-                        <h2 className="text-xl font-bold text-gray-800 mb-1">
-                            {t(`providers.categories.${selectedCategory}`)}
-                        </h2>
-                        <p className="text-gray-600 text-sm">
-                            {filteredVendors.length} {filteredVendors.length === 1
-                                ? t('providers.results.found_singular')
-                                : t('providers.results.found')}
-                            {selectedCategory !== 'all' && ` en ${t(`providers.categories.${selectedCategory}`)}`}
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                            {t('vendorDashboard.welcome')}<span className="font-extrabold">{vendorName}</span>
+                        </h1>
+                        <p className="text-muted-foreground mt-2 flex items-center gap-2">
+                            <Sparkles className="w-4 h-4" />
+                            {t('vendorDashboard.overview')}
                         </p>
                     </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                            setSearchQuery("")
-                            setSelectedCategory("all")
-                        }}
-                        className="whitespace-nowrap bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 border-transparent hover:border-primary/50 shadow-sm hover:shadow-md transition-all duration-200"
-                    >
-                        <X className="h-3 w-3 mr-1.5" />
-                        {t('providers.clearFilters')}
-                    </Button>
-                </div>
 
-                {/* Vendors Grid */}
-                {filteredVendors.length === 0 ? (
-                    <div className="text-center py-8 bg-gray-50 rounded-lg border">
-                        <div className="text-gray-400 mb-3">
-                            <Search className="h-10 w-10 mx-auto" />
-                        </div>
-                        <h3 className="text-base font-semibold mb-1">{t('providers.results.none')}</h3>
-                        <p className="text-gray-500 text-sm">{t('providers.results.noneDescription')}</p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {filteredVendors.map((vendor, index) => (
-                            <motion.div
-                                key={vendor.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                            >
-                                <Card className={`h-full overflow-hidden hover:shadow-md transition-shadow ${vendor.featured ? 'border-primary border' : ''}`}>
-                                    {vendor.featured && (
-                                        <div className="absolute top-2 right-2 z-10">
-                                            <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
-                                                {t('providers.vendorCard.featured')}
-                                            </Badge>
+                    <div className="flex items-center gap-2">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={handleRefreshData}
+                                    className="rounded-full hover:bg-primary/10"
+                                >
+                                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Refresh Data</TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={handleExportReport}
+                                    className="rounded-full hover:bg-primary/10"
+                                >
+                                    <Download className="w-4 h-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Export Report</TooltipContent>
+                        </Tooltip>
+
+                        <Dialog open={showCreateEvent} onOpenChange={setShowCreateEvent}>
+                            <DialogTrigger asChild>
+                                <Button className="rounded-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg">
+                                    <Calendar className="w-4 h-4" />
+                                    Create Event
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Create New Event</DialogTitle>
+                                    <DialogDescription>
+                                        Add a new event to your schedule.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="title">Event Title</Label>
+                                        <Input
+                                            id="title"
+                                            value={newEvent.title}
+                                            onChange={(e) => setNewEvent(prev => ({ ...prev, title: e.target.value }))}
+                                            placeholder="Enter event title"
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="client">Client Name</Label>
+                                        <Input
+                                            id="client"
+                                            value={newEvent.client}
+                                            onChange={(e) => setNewEvent(prev => ({ ...prev, client: e.target.value }))}
+                                            placeholder="Enter client name"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="date">Date</Label>
+                                            <Input
+                                                id="date"
+                                                type="date"
+                                                value={newEvent.date}
+                                                onChange={(e) => setNewEvent(prev => ({ ...prev, date: e.target.value }))}
+                                            />
                                         </div>
-                                    )}
-
-                                    {/* Vendor Image */}
-                                    <div
-                                        className="h-40 w-full bg-cover bg-center relative"
-                                        style={{ backgroundImage: `url(${vendor.image})` }}
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                                        <div className="absolute bottom-3 left-3">
-                                            <Badge className="bg-white/90 text-gray-800 text-xs">
-                                                {vendor.subcategory}
-                                            </Badge>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="time">Time</Label>
+                                            <Input
+                                                id="time"
+                                                type="time"
+                                                value={newEvent.time}
+                                                onChange={(e) => setNewEvent(prev => ({ ...prev, time: e.target.value }))}
+                                            />
                                         </div>
                                     </div>
-
-                                    <CardHeader >
-                                        <div className="grid grid-cols-[1fr_auto] items-start gap-3">
-                                            {/* Left section - will never push right section */}
-                                            <div className="min-w-0 relative group">
-                                                <CardTitle className="text-base font-semibold truncate text-gray-900">
-                                                    {vendor.name}
-                                                </CardTitle>
-
-                                                {/* Hover overlay */}
-                                                <CardTitle className="absolute left-0 top-0 z-50 whitespace-nowrap bg-white hidden group-hover:block px-0 m-0">
-                                                    {vendor.name}
-                                                </CardTitle>
-
-                                                <CardDescription className="mt-2">
-                                                    <div className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg max-w-full cursor-pointer">
-                                                        <MapPin className="h-3 w-3 text-blue-600 shrink-0 flex-shrink-0" />
-                                                        <span className="text-xs font-medium text-blue-800 truncate max-w-[180px]">
-                                                            {vendor.location}
-                                                        </span>
-                                                    </div>
-                                                </CardDescription>
-                                            </div>
-
-                                            {/* Right section - fixed width */}
-                                            <div className="flex-shrink-0">
-                                                <div className="flex items-center gap-1 px-3 py-2 border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg whitespace-nowrap cursor-pointer">
-                                                    <Star className="h-3 w-3 fill-amber-500 text-amber-500 flex-shrink-0" />
-                                                    <span className="font-bold text-sm text-amber-800">{vendor.rating}</span>
-                                                    <span className="text-amber-600 text-xs">({vendor.reviews})</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-
-
-                                    <CardContent >
-
-                                        {/* Description */}
-                                        <p className="text-gray-600 text-md line-clamp-3 mb-2">{vendor.description}</p>
-
-                                        {/* Services */}
-                                        <div className="mt-3">
-                                            <p className="text-md font-bold text-gray-800 mb-1">{t('providers.vendorCard.services')}</p>
-
-                                            <div className="flex flex-wrap gap-2 overflow-x-auto p-1 mb-2">
-                                                {vendor.services.slice(0, 3).map((service, idx) => (
-                                                    <Badge
-                                                        key={idx}
-                                                        variant="secondary"
-                                                        className={`
-          text-sm px-2 py-1 rounded-lg bg-indigo-200/20 text-indigo-800 border-indigo-800
-          transition-all duration-150 cursor-pointer
-          hover:scale-105 hover:bg-indigo-50
-        `}
-                                                    >
-                                                        {service}
-                                                    </Badge>
-                                                ))}
-                                                {vendor.services.length > 3 && (
-                                                    <Badge variant="secondary" className="text-sm px-2 py-1 rounded-lg bg-indigo-200/20 text-indigo-800 border-indigo-800 cursor-pointer">
-                                                        +{vendor.services.length - 3}
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Price Range */}
-                                        <div className="flex items-center justify-between mb-3 px-3 py-0.5 bg-gradient-to-r from-indigo-50/60 to-pink-50/60 rounded-xl border border-indigo-100 cursor-pointer">
-                                            <span className="text-sm font-semibold text-indigo-700">
-                                                {t('providers.vendorCard.priceRange')}
-                                            </span>
-                                            <div className="flex flex-col items-end">
-                                                <div className={`
-            text-xs font-medium px-3 py-0.5 rounded-full text-center
-            ${vendor.priceRange === "$" ? "bg-emerald-100 text-emerald-800" : ""}
-            ${vendor.priceRange === "$$" ? "bg-blue-100 text-blue-800" : ""}
-            ${vendor.priceRange === "$$$" ? "bg-purple-100 text-purple-800" : ""}
-            ${vendor.priceRange === "$$$$" ? "bg-amber-100 text-amber-800" : ""}
-        `}>
-                                                    <div>
-                                                        {vendor.priceRange === "$" && "Económico"}
-                                                        {vendor.priceRange === "$$" && "Moderado"}
-                                                        {vendor.priceRange === "$$$" && "Premium"}
-                                                        {vendor.priceRange === "$$$$" && "Lujo"}
-                                                    </div>
-                                                    <div className={`
-                text-xs font-bold
-                ${vendor.priceRange === "$" ? "text-emerald-700" : ""}
-                ${vendor.priceRange === "$$" ? "text-blue-700" : ""}
-                ${vendor.priceRange === "$$$" ? "text-purple-700" : ""}
-                ${vendor.priceRange === "$$$$" ? "text-amber-700" : ""}
-            `}>
-                                                        {vendor.priceRange}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </CardContent>
-
-                                    <CardFooter className="pt-2 border-t flex flex-col gap-2">
-                                        {/* <div className="flex items-center gap-2 text-xs text-gray-600 w-full">
-                                            <Phone className="h-3 w-3" />
-                                            <span className="truncate">{vendor.contact.phone}</span>
-                                        </div> */}
-
-                                        <div className="flex gap-2 w-full">
-                                            <Button
-                                                size="sm"
-                                                className="flex-1 text-sm h-8"
-                                                onClick={() => window.open(`tel:${vendor.contact.phone}`)}
-                                            >
-                                                {t('providers.vendorCard.call')}
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                className="flex-1 text-sm h-8"
-                                                onClick={() => window.open(`mailto:${vendor.contact.email}`)}
-                                            >
-                                                <Mail className="h-3 w-3 mr-1" />
-                                                {t('providers.vendorCard.email')}
-                                            </Button>
-                                            {vendor.contact.website && (
-                                                <Button
-                                                    size="sm"
-                                                    variant="ghost"
-                                                    className="h-8 w-8 p-0"
-                                                    onClick={() => window.open(vendor.contact.website, '_blank')}
-                                                >
-                                                    <Globe className="h-4 w-4" />
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </motion.div>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            {/* Statistics Section */}
-            <Card className="mt-8">
-                <CardHeader>
-                    <CardTitle className="text-lg font-heading">{t('providers.statistics')}</CardTitle>
-                    <CardDescription>{t('providers.statisticsDescription')}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {categories.slice(1).map((category) => (
-                            <div key={category.id} className="text-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg">
-                                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-2">
-                                    <div className="text-primary">
-                                        {category.icon}
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="type">Event Type</Label>
+                                        <Select
+                                            value={newEvent.type}
+                                            onValueChange={(value) => setNewEvent(prev => ({ ...prev, type: value }))}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select event type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="corporate">Corporate</SelectItem>
+                                                <SelectItem value="wedding">Wedding</SelectItem>
+                                                <SelectItem value="quinceañera">XV Años</SelectItem>
+                                                <SelectItem value="graduation">Graduation</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="revenue">Estimated Revenue (MXN)</Label>
+                                        <Input
+                                            id="revenue"
+                                            type="number"
+                                            value={newEvent.revenue}
+                                            onChange={(e) => setNewEvent(prev => ({ ...prev, revenue: Number(e.target.value) }))}
+                                            placeholder="Enter estimated revenue"
+                                        />
                                     </div>
                                 </div>
-                                <p className="text-lg font-bold">{category.count}</p>
-                                <p className="text-sm text-gray-600">{t(`providers.categories.${category.id}`)}</p>
-                            </div>
-                        ))}
+                                <DialogFooter>
+                                    <Button variant="outline" onClick={() => setShowCreateEvent(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={handleCreateEvent}>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Create Event
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
-                </CardContent>
-            </Card>
+                </motion.div>
 
-            {/* Call to Action */}
-            {/* <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-                <CardContent className="p-6 text-center">
-                    <h3 className="text-xl font-heading font-bold mb-2">{t('providers.joinPrompt')}</h3>
-                    <p className="text-gray-600 mb-4">
-                        {t('providers.joinDescription')}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <Button className="gradient-royal hover:glow-primary transition-all duration-300">
-                            {t('providers.registerBusiness')}
-                        </Button>
-                        <Button variant="outline">
-                            {t('providers.moreInfo')}
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card> */}
-        </div>
+                {/* Stats Cards */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+                >
+                    {[
+                        {
+                            title: 'Active Bookings',
+                            value: stats.activeBookings.toString(),
+                            icon: Calendar,
+                            change: "+2",
+                            color: "from-purple-500 to-pink-500",
+                            trend: "up"
+                        },
+                        {
+                            title: 'Total Revenue',
+                            value: formatCurrency(stats.totalRevenue),
+                            icon: DollarSign,
+                            change: `+${stats.monthlyGrowth}%`,
+                            color: "from-blue-500 to-cyan-500",
+                            trend: "up"
+                        },
+                        {
+                            title: 'Upcoming Events',
+                            value: stats.upcomingEvents.toString(),
+                            icon: Users,
+                            change: "+1",
+                            color: "from-green-500 to-emerald-500",
+                            trend: "up"
+                        },
+                        {
+                            title: 'Satisfaction Rate',
+                            value: `${stats.satisfactionRate}%`,
+                            icon: Star,
+                            change: "+5%",
+                            color: "from-amber-500 to-orange-500",
+                            trend: "up"
+                        },
+                    ].map((stat, index) => (
+                        <motion.div
+                            key={index}
+                            whileHover={{ y: -4, scale: 1.02 }}
+                            className="relative overflow-hidden group"
+                        >
+                            <Card className="border-0 bg-gradient-to-br from-white to-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                <CardContent className="p-6">
+                                    <div className="flex items-start justify-between">
+                                        <div className="space-y-2">
+                                            <p className="text-sm font-medium text-muted-foreground">
+                                                {stat.title}
+                                            </p>
+                                            <p className="text-3xl font-bold">
+                                                {stat.value}
+                                            </p>
+                                            <div className="flex items-center gap-1">
+                                                {stat.trend === "up" ? (
+                                                    <TrendingUp className="w-4 h-4 text-green-600" />
+                                                ) : (
+                                                    <TrendingDown className="w-4 h-4 text-red-600" />
+                                                )}
+                                                <span className={`text-sm font-medium ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}>
+                                                    {stat.change}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">this month</span>
+                                            </div>
+                                        </div>
+                                        <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} shadow-md`}>
+                                            <stat.icon className="w-6 h-6 text-white" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
+                {/* Main Content with Tabs */}
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                    <TabsList className="grid grid-cols-2 sm:grid-cols-4 lg:w-auto bg-muted/50 p-1 rounded-xl">
+                        <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                            <BarChart3 className="w-4 h-4 mr-2" />
+                            Overview
+                        </TabsTrigger>
+                        <TabsTrigger value="events" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                            <Calendar className="w-4 h-4 mr-2" />
+                            Events
+                        </TabsTrigger>
+                        <TabsTrigger value="orders" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                            <Package className="w-4 h-4 mr-2" />
+                            Orders
+                        </TabsTrigger>
+                        <TabsTrigger value="reservations" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                            <Users className="w-4 h-4 mr-2" />
+                            Reservations
+                        </TabsTrigger>
+                    </TabsList>
+
+                    {/* Overview Tab */}
+                    <TabsContent value="overview" className="space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {/* Recent Events */}
+                            <Card className="lg:col-span-2">
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <div>
+                                        <CardTitle className="text-xl flex items-center gap-2">
+                                            <Calendar className="w-5 h-5" />
+                                            Recent Events
+                                        </CardTitle>
+                                        <CardDescription>
+                                            Your upcoming and recent events
+                                        </CardDescription>
+                                    </div>
+                                    <Button variant="ghost" size="sm" className="gap-2">
+                                        <ChevronRight className="w-4 h-4" />
+                                    </Button>
+                                </CardHeader>
+                                <CardContent>
+                                    <AnimatePresence>
+                                        <div className="space-y-4">
+                                            {events.slice(0, 3).map((event, index) => (
+                                                <motion.div
+                                                    key={event.id}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: index * 0.1 }}
+                                                    whileHover={{ x: 4 }}
+                                                    className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                                                        <div className="flex-shrink-0">
+                                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-purple-100 flex items-center justify-center">
+                                                                <Calendar className="w-6 h-6 text-primary" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <h3 className="font-semibold truncate">{event.title}</h3>
+                                                                <Badge variant="secondary" className={getStatusColor(event.status)}>
+                                                                    {event.status}
+                                                                </Badge>
+                                                            </div>
+                                                            <p className="text-sm text-muted-foreground truncate">
+                                                                {event.client} • {event.date} at {event.time}
+                                                            </p>
+                                                            <div className="mt-2">
+                                                                <div className="flex items-center justify-between text-xs mb-1">
+                                                                    <span>Progress</span>
+                                                                    <span>{event.progress}%</span>
+                                                                </div>
+                                                                <Progress value={event.progress} className="h-2" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex flex-col items-end ml-4">
+                                                        <p className="font-bold text-lg">{formatCurrency(event.revenue)}</p>
+                                                        <p className="text-xs text-muted-foreground capitalize">
+                                                            {getEventTypeDisplay(event.type)}
+                                                        </p>
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <MoreVertical className="w-4 h-4" />
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end">
+                                                                <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'confirmed')}>
+                                                                    <Check className="w-4 h-4 mr-2" />
+                                                                    Confirm Event
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'completed')}>
+                                                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                                                    Mark Complete
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'cancelled')}>
+                                                                    <X className="w-4 h-4 mr-2" />
+                                                                    Cancel Event
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuSeparator />
+                                                                <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteEvent(event.id)}>
+                                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                                    Delete
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </AnimatePresence>
+                                </CardContent>
+                            </Card>
+
+                            {/* Quick Links & Performance */}
+                            <div className="space-y-6">
+                                {/* Quick Links */}
+                                <Card className="overflow-hidden">
+                                    <CardHeader className="pb-3 space-y-1">
+                                        <div className="flex items-center gap-2">
+                                            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/10 to-purple-100">
+                                                <Sparkles className="w-5 h-5 text-primary" />
+                                            </div>
+                                            <CardTitle className="text-lg font-semibold truncate">
+                                                Quick Actions
+                                            </CardTitle>
+                                        </div>
+                                        <CardDescription className="text-sm line-clamp-2 text-muted-foreground/80">
+                                            Common tasks and actions
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {quickLinks.map((link, index) => (
+                                                <motion.div
+                                                    key={index}
+                                                    whileHover={{ y: -2 }}
+                                                    className="group"
+                                                >
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="h-full p-3 flex flex-col items-center justify-center gap-2 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all w-full min-h-[110px] group-hover:shadow-sm"
+                                                        onClick={() => toast.info(`Navigating to ${link.label}`)}
+                                                    >
+                                                        <div className={`p-2.5 rounded-lg bg-gradient-to-br ${link.color} group-hover:scale-105 transition-transform`}>
+                                                            <link.icon className="w-4.5 h-4.5 text-white" />
+                                                        </div>
+                                                        <div className="space-y-1 w-full text-center">
+                                                            <span className="font-semibold text-xs sm:text-sm truncate block w-full px-1">
+                                                                {link.label}
+                                                            </span>
+                                                            <p className="text-[11px] text-muted-foreground line-clamp-2 leading-tight h-8 overflow-hidden w-full px-0.5">
+                                                                {link.description}
+                                                            </p>
+                                                        </div>
+                                                    </Button>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Performance Metrics */}
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-xl flex items-center gap-2">
+                                            <Target className="w-5 h-5" />
+                                            Performance Summary
+                                        </CardTitle>
+                                        <CardDescription>
+                                            Your key performance indicators
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        {performanceMetrics.map((metric, index) => (
+                                            <div key={index} className="space-y-2">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-sm font-medium">{metric.label}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-bold">{metric.value}%</span>
+                                                        <Badge variant={metric.change >= 0 ? "default" : "destructive"} className="text-xs">
+                                                            {metric.change >= 0 ? '+' : ''}{metric.change}%
+                                                        </Badge>
+                                                    </div>
+                                                </div>
+                                                <div className="relative">
+                                                    <Progress value={metric.value} className="h-2" />
+                                                    <div className="absolute top-0 left-0 w-full h-full flex">
+                                                        <div
+                                                            className="h-full border-r border-white/50"
+                                                            style={{ width: `${metric.target}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-between text-xs text-muted-foreground">
+                                                    <span>Current: {metric.value}%</span>
+                                                    <span>Target: {metric.target}%</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </div>
+                    </TabsContent>
+
+                    {/* Events Tab */}
+                    <TabsContent value="events">
+                        <Card>
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <CardTitle className="text-2xl">All Events</CardTitle>
+                                        <CardDescription>
+                                            Manage your upcoming and past events
+                                        </CardDescription>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="sm" onClick={() => toast.info("Filter functionality coming soon")}>
+                                            <Filter className="w-4 h-4 mr-2" />
+                                            Filter
+                                        </Button>
+                                        <Button onClick={() => setShowCreateEvent(true)}>
+                                            <Calendar className="w-4 h-4 mr-2" />
+                                            Create Event
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {events.map((event) => (
+                                        <div key={event.id} className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-purple-100 flex items-center justify-center">
+                                                    <Calendar className="w-8 h-8 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold">{event.title}</h3>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {event.client} • {event.date} at {event.time}
+                                                    </p>
+                                                    <div className="flex items-center gap-2 mt-2">
+                                                        <Badge className={getStatusColor(event.status)}>
+                                                            {event.status}
+                                                        </Badge>
+                                                        <Badge variant="outline">
+                                                            {getEventTypeDisplay(event.type)}
+                                                        </Badge>
+                                                        <span className="font-bold">{formatCurrency(event.revenue)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Progress value={event.progress} className="w-24" />
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="icon">
+                                                            <MoreVertical className="w-4 h-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'confirmed')}>
+                                                            <Check className="w-4 h-4 mr-2" />
+                                                            Confirm
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'completed')}>
+                                                            <CheckCircle className="w-4 h-4 mr-2" />
+                                                            Complete
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'cancelled')}>
+                                                            <X className="w-4 h-4 mr-2" />
+                                                            Cancel
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteEvent(event.id)}>
+                                                            <Trash2 className="w-4 h-4 mr-2" />
+                                                            Delete
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* Payments Tab */}
+                    {/* <TabsContent value="payments">
+                        <Card>
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <CardTitle className="text-2xl">Payments</CardTitle>
+                                        <CardDescription>
+                                            Track and manage your payments
+                                        </CardDescription>
+                                    </div>
+                                    <Button variant="outline" onClick={handleExportReport}>
+                                        <Download className="w-4 h-4 mr-2" />
+                                        Export
+                                    </Button>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {payments.map((payment) => (
+                                        <motion.div
+                                            key={payment.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.1 }}
+                                            className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className={`p-3 rounded-lg ${getStatusColor(payment.status)}`}>
+                                                    <DollarSign className="w-6 h-6" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold">{formatCurrency(payment.amount)}</h3>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {payment.client} • {payment.date}
+                                                    </p>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <Badge variant="outline">{payment.method}</Badge>
+                                                        <Badge className={getStatusColor(payment.status)}>
+                                                            {payment.status}
+                                                        </Badge>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                {payment.status === 'pending' && (
+                                                    <Button size="sm" onClick={() => handleProcessPayment(payment.id)}>
+                                                        Process
+                                                    </Button>
+                                                )}
+                                                <Button variant="ghost" size="sm" onClick={() => toast.info(`Viewing payment ${payment.id}`)}>
+                                                    View
+                                                </Button>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                            <CardFooter className="border-t pt-6">
+                                <div className="w-full flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">This Month</p>
+                                        <p className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</p>
+                                    </div>
+                                    <Button className="gap-2" onClick={() => toast.info("Share functionality coming soon")}>
+                                        <Share2 className="w-4 h-4" />
+                                        Share
+                                    </Button>
+                                </div>
+                            </CardFooter>
+                        </Card>
+                    </TabsContent> */}
+
+                    {/* Performance Tab */}
+                    {/* <TabsContent value="performance">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-xl flex items-center gap-2">
+                                        <TrendingUp className="w-5 h-5" />
+                                        Revenue Growth
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Your revenue growth over time
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-64 flex items-center justify-center rounded-lg bg-gradient-to-br from-primary/5 to-purple-100 border">
+                                        <div className="text-center">
+                                            <BarChart3 className="w-12 h-12 mx-auto text-primary mb-4" />
+                                            <p className="text-muted-foreground">Chart visualization coming soon</p>
+                                            <Button variant="outline" className="mt-4" onClick={() => toast.info("Detailed analytics coming soon")}>
+                                                View Detailed Analytics
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-xl flex items-center gap-2">
+                                        <Users className="w-5 h-5" />
+                                        Client Satisfaction
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Your client satisfaction ratings
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
+                                                <span className="text-3xl font-bold">4.8</span>
+                                                <span className="text-muted-foreground">/ 5.0</span>
+                                            </div>
+                                            <Badge variant="outline" className="bg-green-50 text-green-700">
+                                                <TrendingUp className="w-3 h-3 mr-1" />
+                                                +12% this month
+                                            </Badge>
+                                        </div>
+                                        <div className="space-y-2">
+                                            {[5, 4, 3, 2, 1].map((stars) => (
+                                                <div key={stars} className="flex items-center gap-2">
+                                                    <span className="text-sm w-8">{stars}★</span>
+                                                    <Progress value={stars * 20} className="flex-1 h-2" />
+                                                    <span className="text-sm text-muted-foreground w-8">85%</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <Separator />
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-muted-foreground">Total Reviews</span>
+                                            <span className="font-semibold">142 reviews</span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent> */}
+                </Tabs>
+
+                {/* Notifications Panel */}
+                <AnimatePresence>
+                    {unreadNotifications > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            className="fixed bottom-6 right-6 z-50"
+                        >
+                            <Card className="shadow-2xl border-primary/20 w-80">
+                                <CardHeader className="pb-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <BellRing className="w-5 h-5 text-primary" />
+                                            <CardTitle className="text-lg">Notifications</CardTitle>
+                                        </div>
+                                        <Badge>{unreadNotifications} new</Badge>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8"
+                                            onClick={() => setShowNotifications(false)}
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </Button>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    {notifications.slice(0, 2).map((notification) => (
+                                        <div key={notification.id} className="flex items-start gap-3 p-3 rounded-lg bg-primary/5">
+                                            {notification.type === 'success' && (
+                                                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            {notification.type === 'info' && (
+                                                <BellRing className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            {notification.type === 'warning' && (
+                                                <Clock className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            {notification.type === 'error' && (
+                                                <X className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            <div>
+                                                <p className="font-medium">{notification.title}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {notification.description}
+                                                </p>
+                                                <p className="text-xs text-primary mt-1">{notification.time}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="w-full justify-center"
+                                        onClick={handleMarkAllAsRead}
+                                    >
+                                        Mark All as Read
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Notification Bell */}
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="fixed bottom-6 left-6 rounded-full shadow-lg"
+                    onClick={() => setShowNotifications(!showNotifications)}
+                >
+                    <BellRing className="w-5 h-5" />
+                    {unreadNotifications > 0 && (
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                            {unreadNotifications}
+                        </span>
+                    )}
+                </Button>
+            </div>
+        </TooltipProvider>
     )
 }
