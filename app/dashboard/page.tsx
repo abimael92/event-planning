@@ -1,13 +1,9 @@
-import { EnhancedEventDashboard } from "@/components/dashboard/enhanced-event-dashboard"
-import { DashboardLayout } from "@/components/layout/dashboard-layout"
-import { ProtectedRoute } from "@/components/auth/protected-route" // components/auth/protected-route.tsx
+// app/vendor/page.tsx
+"use client"
+
+import { EventDashboard } from "@/components/dashboard/event-dashboard"
+
 
 export default function DashboardPage() {
-  return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <EnhancedEventDashboard />
-      </DashboardLayout>
-    </ProtectedRoute>
-  )
+  return <EventDashboard />
 }

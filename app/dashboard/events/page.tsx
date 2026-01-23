@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, MapPin, Users, DollarSign, MoreVertical, Filter, CalendarDays, TrendingUp } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
-import { DashboardLayout } from "@/components/layout/dashboard-layout"
+import { DashboardLayout } from "app/dashboard/_components/dashboard-layout"
 import { ProtectedRoute } from "@/components/auth/protected-route"
 
 const mockEvents = [
@@ -102,8 +102,7 @@ export default function EventsPage() {
 
 
     return (
-        <ProtectedRoute>
-                <DashboardLayout>
+  
                     <div className="w-full space-y-6 p-4 md:p-6 overflow-x-hidden">
 
                     {/* Hero Section */}
@@ -308,7 +307,5 @@ export default function EventsPage() {
                             ))}
                         </div>
                     </div>
-                </DashboardLayout>
-        </ProtectedRoute>
     )
 }

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar, CheckCircle, Clock, AlertCircle, DollarSign, Users, MapPin, MoreVertical } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
-import { DashboardLayout } from "@/components/layout/dashboard-layout"
+import { DashboardLayout } from "app/dashboard/_components/dashboard-layout"
 
 const mockBookings = [
   {
@@ -82,7 +82,6 @@ export default function BookingsPage() {
   }
 
   return (
-    <DashboardLayout>
       <div className="w-full space-y-6 p-4 md:p-6 overflow-x-hidden">
         {/* Header */}
         <div className="relative overflow-hidden rounded-lg md:rounded-xl p-4 md:p-6 lg:p-8 w-full animate-gradient-shift">
@@ -257,7 +256,6 @@ export default function BookingsPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayout>
   )
 }
 
