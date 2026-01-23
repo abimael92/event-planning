@@ -40,19 +40,12 @@ interface VendorLayoutProps {
 }
 
 export function VendorLayout({ children }: VendorLayoutProps) {
-    const pathname = usePathname()
-    const router = useRouter()
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const { t } = useTranslation()
-    const { logout } = useAuth() // Add this
-
-
-    const handleLogout = () => {
-        console.log("Logout clicked");
-        logout(); // Call the auth context logout
-        router.push('/'); // Redirect to home
-    }
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+  const { user, logout } = useAuth()
+  const { t } = useTranslation()
 
 
     const navItems = [
@@ -84,23 +77,33 @@ export function VendorLayout({ children }: VendorLayoutProps) {
             icon: TrendingUp
         },
     ]
+    
+      const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
+
+  const handleNavigation = (href: string) => {
+    router.push(href)
+    setSidebarOpen(false)
+  }
+    
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50/30">
             {/* Mobile Overlay */}
-            {mobileMenuOpen && (
-                <div
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-                    onClick={() => setMobileMenuOpen(false)}
-                />
-            )}
+             {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
             {/* Sidebar */}
             <aside className={cn(
                 "fixed lg:static inset-y-0 left-0 z-50 bg-white/95 backdrop-blur-xl border-r border-white/20 shadow-2xl lg:shadow-xl transition-all duration-300 ease-in-out flex flex-col",
-                sidebarCollapsed ? "w-20 lg:w-20" : "w-64 lg:w-72",
-                mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-            )}>
+               sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
                 <div className="flex flex-col h-full !p-2 lg:p-6">
                     {/* Header */}
                     <div className={cn(
@@ -223,15 +226,14 @@ export function VendorLayout({ children }: VendorLayoutProps) {
                     <nav className="space-y-1 flex-1">
                         {navItems.map((item) => {
                             const Icon = item.icon
-                            const isActive = pathname === item.href
+                            const isActive = pathname?.startsWith(item.href)
 
                             return (
-                                <Link
+                                <button
                                     key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileMenuOpen(false)}
+                                     onClick={() => handleNavigation(item.href)}
                                     className={cn(
-                                        "group flex items-center relative overflow-hidden transition-all duration-200",
+                                        "group flex items-center relative overflow-hidden transition-all duration-200 w-full",
                                         sidebarCollapsed
                                             ? "justify-center p-2 rounded-xl"
                                             : "gap-3 rounded-xl px-3 py-2 lg:py-3",
@@ -240,26 +242,20 @@ export function VendorLayout({ children }: VendorLayoutProps) {
                                             : "text-muted-foreground hover:text-foreground hover:bg-white/60 hover:shadow-md hover:border-white/50"
                                     )}
                                 >
+                                    {/* Keep all the same inner content */}
                                     <div className={cn(
                                         "flex items-center justify-center rounded-lg transition-all duration-200 relative",
-                                        sidebarCollapsed
-                                            ? "w-10 h-10"
-                                            : "w-9 h-9 lg:w-10 lg:h-10",
+                                        sidebarCollapsed ? "w-10 h-10" : "w-9 h-9 lg:w-10 lg:h-10",
                                         isActive
                                             ? "bg-gradient-to-br from-purple-500 to-blue-600 text-white shadow-md"
                                             : "bg-white/50 group-hover:bg-white/80 text-muted-foreground group-hover:text-primary"
                                     )}>
                                         <Icon className={sidebarCollapsed ? "h-5 w-5" : "h-4 w-4 lg:h-5 lg:w-5"} />
-                                        {item.badge && sidebarCollapsed && (
-                                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-white text-[10px] font-bold text-white flex items-center justify-center shadow-md">
-                                                {item.badge > 9 ? '9+' : item.badge}
-                                            </span>
-                                        )}
                                     </div>
 
                                     {!sidebarCollapsed && (
                                         <>
-                                            <span className="font-medium text-sm flex-1 truncate ml-2">{item.label}</span>
+                                            <span className="font-medium text-sm flex-1 truncate ml-2 text-left">{item.label}</span>
                                             {item.badge && (
                                                 <Badge variant="secondary" className="bg-primary/10 text-primary text-xs h-5 px-1.5 flex-shrink-0">
                                                     {item.badge}
@@ -267,16 +263,7 @@ export function VendorLayout({ children }: VendorLayoutProps) {
                                             )}
                                         </>
                                     )}
-
-                                    {/* Active indicator - different position based on state */}
-                                    {isActive && !sidebarCollapsed && (
-                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-600 rounded-full" />
-                                    )}
-
-                                    {isActive && sidebarCollapsed && (
-                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full" />
-                                    )}
-                                </Link>
+                                </button>
                             )
                         })}
                     </nav>
@@ -341,7 +328,7 @@ export function VendorLayout({ children }: VendorLayoutProps) {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => setMobileMenuOpen(true)}
+                                onClick={() => setSidebarOpen(true)}
                                 className="lg:hidden hover:bg-white/50 h-9 w-9"
                             >
                                 <Menu className="h-4 w-4 lg:h-5 lg:w-5" />

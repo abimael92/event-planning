@@ -8,7 +8,8 @@ import {
     Package, Image, Video, MessageSquare, Settings,
     ChevronRight, MoreVertical, Download, Share2,
     BellRing, CalendarDays, Gift, Trophy, Sparkles,
-    BarChart3, PieChart, Filter, RefreshCw, Eye
+    BarChart3, PieChart, Filter, RefreshCw, Eye,
+    X, Check, Edit, Trash2, Plus
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -39,6 +40,25 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { useTranslation } from "@/hooks/use-translation"
 import { toast } from "sonner"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
 // Mock data types
 interface Event {
@@ -78,18 +98,64 @@ interface QuickLink {
     description: string
 }
 
+interface Notification {
+    id: string
+    title: string
+    description: string
+    time: string
+    type: 'success' | 'info' | 'warning' | 'error'
+    read: boolean
+}
+
 export function VendorDashboard() {
     const [vendorName] = useState("Sorpresas")
     const [activeTab, setActiveTab] = useState("overview")
     const [events, setEvents] = useState<Event[]>([])
     const [payments, setPayments] = useState<Payment[]>([])
     const [loading, setLoading] = useState(true)
-    const [notifications, setNotifications] = useState(3)
+    const [notifications, setNotifications] = useState<Notification[]>([
+        {
+            id: '1',
+            title: 'Booking Confirmed',
+            description: 'Corporate Gala has been confirmed by the client',
+            time: '2 hours ago',
+            type: 'success',
+            read: false
+        },
+        {
+            id: '2',
+            title: 'Payment Received',
+            description: 'Payment of $9,200 has been processed',
+            time: '1 day ago',
+            type: 'success',
+            read: false
+        },
+        {
+            id: '3',
+            title: 'Review Submitted',
+            description: 'Client left a 5-star review for your service',
+            time: '2 days ago',
+            type: 'info',
+            read: false
+        }
+    ])
+
+    const [showNotifications, setShowNotifications] = useState(false)
+    const [showCreateEvent, setShowCreateEvent] = useState(false)
+    const [newEvent, setNewEvent] = useState({
+        title: '',
+        client: '',
+        date: '',
+        time: '',
+        type: 'corporate',
+        revenue: 0
+    })
+
     const { t } = useTranslation()
 
+    // Load mock data
     useEffect(() => {
-        // Simulate data loading
-        setTimeout(() => {
+        const loadMockData = () => {
             setEvents([
                 {
                     id: '1',
@@ -211,13 +277,16 @@ export function VendorDashboard() {
             ])
 
             setLoading(false)
-        }, 1000)
+        }
+
+        setTimeout(loadMockData, 1000)
     }, [])
 
+    // Calculate stats dynamically
     const stats = {
-        activeBookings: 6,
-        totalRevenue: 153800,
-        upcomingEvents: 4,
+        activeBookings: events.filter(e => e.status === 'confirmed' || e.status === 'pending').length,
+        totalRevenue: events.reduce((sum, event) => sum + event.revenue, 0),
+        upcomingEvents: events.filter(e => e.status === 'confirmed' || e.status === 'pending').length,
         satisfactionRate: 98,
         monthlyGrowth: 32,
         completionRate: 92,
@@ -285,28 +354,13 @@ export function VendorDashboard() {
         },
     ]
 
+    // Helper functions
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('es-MX', {
             style: 'currency',
             currency: 'MXN',
             minimumFractionDigits: 0,
         }).format(amount)
-    }
-
-    const formatTimeAgo = (count: number, unit: 'hour' | 'day') => {
-        if (unit === 'hour') {
-            return t('vendorDashboard.time.hoursAgo').replace('{count}', count.toString())
-        } else {
-            return t('vendorDashboard.time.daysAgo').replace('{count}', count.toString())
-        }
-    }
-
-    const getTimeAgoText = (count: number, unit: 'hour' | 'day') => {
-        const translation = unit === 'hour'
-            ? t('vendorDashboard.time.hoursAgo')
-            : t('vendorDashboard.time.daysAgo')
-
-        return translation.replace('{count}', count.toString())
     }
 
     const getEventTypeDisplay = (type: string) => {
@@ -324,7 +378,6 @@ export function VendorDashboard() {
     }
 
     const getStatusColor = (status: string) => {
-        const statusKey = status as keyof typeof statusColors
         const statusColors = {
             'confirmed': 'bg-green-100 text-green-800 border-green-200',
             'pending': 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -333,13 +386,14 @@ export function VendorDashboard() {
             'paid': 'bg-green-100 text-green-800',
             'overdue': 'bg-red-100 text-red-800'
         }
-        return statusColors[statusKey] || 'bg-gray-100 text-gray-800 border-gray-200'
+        return statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800 border-gray-200'
     }
 
     const getStatusText = (status: string) => {
         return t(`common.status.${status}`) || status
     }
 
+    // Event handlers
     const handleRefreshData = () => {
         setLoading(true)
         setTimeout(() => {
@@ -352,9 +406,84 @@ export function VendorDashboard() {
 
     const handleExportReport = () => {
         toast.info(t('common.info'), {
-            description: "Exporting monthly report..."
+            description: "Exporting monthly report...",
+            duration: 3000,
+            action: {
+                label: "Download",
+                onClick: () => console.log("Downloading report...")
+            }
         })
     }
+
+    const handleCreateEvent = () => {
+        if (!newEvent.title || !newEvent.client || !newEvent.date || !newEvent.time) {
+            toast.error("Please fill in all required fields")
+            return
+        }
+
+        const event: Event = {
+            id: Date.now().toString(),
+            title: newEvent.title,
+            client: newEvent.client,
+            date: newEvent.date,
+            time: newEvent.time,
+            status: 'pending',
+            revenue: newEvent.revenue,
+            type: newEvent.type,
+            progress: 10
+        }
+
+        setEvents(prev => [event, ...prev])
+        setShowCreateEvent(false)
+        setNewEvent({
+            title: '',
+            client: '',
+            date: '',
+            time: '',
+            type: 'corporate',
+            revenue: 0
+        })
+
+        toast.success("Event created successfully!", {
+            description: `${newEvent.title} has been added to your events`
+        })
+    }
+
+    const handleUpdateEventStatus = (eventId: string, newStatus: Event['status']) => {
+        setEvents(prev => prev.map(event =>
+            event.id === eventId ? { ...event, status: newStatus } : event
+        ))
+
+        toast.info("Event status updated", {
+            description: `Event status changed to ${newStatus}`
+        })
+    }
+
+    const handleDeleteEvent = (eventId: string) => {
+        setEvents(prev => prev.filter(event => event.id !== eventId))
+        toast.warning("Event deleted", {
+            description: "Event has been removed from your list"
+        })
+    }
+
+    const handleMarkAllAsRead = () => {
+        setNotifications(prev => prev.map(notification => ({
+            ...notification,
+            read: true
+        })))
+        toast.info("All notifications marked as read")
+    }
+
+    const handleProcessPayment = (paymentId: string) => {
+        setPayments(prev => prev.map(payment =>
+            payment.id === paymentId ? { ...payment, status: 'paid' } : payment
+        ))
+        toast.success("Payment processed", {
+            description: "Payment status updated to paid"
+        })
+    }
+
+    const unreadNotifications = notifications.filter(n => !n.read).length
 
     if (loading) {
         return (
@@ -412,7 +541,7 @@ export function VendorDashboard() {
                                     <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>{t('ui.tooltips.refresh')}</TooltipContent>
+                            <TooltipContent>Refresh Data</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -426,17 +555,105 @@ export function VendorDashboard() {
                                     <Download className="w-4 h-4" />
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>{t('ui.tooltips.export')}</TooltipContent>
+                            <TooltipContent>Export Report</TooltipContent>
                         </Tooltip>
 
-                        <Button className="rounded-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg">
-                            <Calendar className="w-4 h-4" />
-                            {t('vendorDashboard.actions.createEvent')}
-                        </Button>
+                        <Dialog open={showCreateEvent} onOpenChange={setShowCreateEvent}>
+                            <DialogTrigger asChild>
+                                <Button className="rounded-full gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg">
+                                    <Calendar className="w-4 h-4" />
+                                    Create Event
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Create New Event</DialogTitle>
+                                    <DialogDescription>
+                                        Add a new event to your schedule.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="title">Event Title</Label>
+                                        <Input
+                                            id="title"
+                                            value={newEvent.title}
+                                            onChange={(e) => setNewEvent(prev => ({ ...prev, title: e.target.value }))}
+                                            placeholder="Enter event title"
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="client">Client Name</Label>
+                                        <Input
+                                            id="client"
+                                            value={newEvent.client}
+                                            onChange={(e) => setNewEvent(prev => ({ ...prev, client: e.target.value }))}
+                                            placeholder="Enter client name"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="date">Date</Label>
+                                            <Input
+                                                id="date"
+                                                type="date"
+                                                value={newEvent.date}
+                                                onChange={(e) => setNewEvent(prev => ({ ...prev, date: e.target.value }))}
+                                            />
+                                        </div>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="time">Time</Label>
+                                            <Input
+                                                id="time"
+                                                type="time"
+                                                value={newEvent.time}
+                                                onChange={(e) => setNewEvent(prev => ({ ...prev, time: e.target.value }))}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="type">Event Type</Label>
+                                        <Select
+                                            value={newEvent.type}
+                                            onValueChange={(value) => setNewEvent(prev => ({ ...prev, type: value }))}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select event type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="corporate">Corporate</SelectItem>
+                                                <SelectItem value="wedding">Wedding</SelectItem>
+                                                <SelectItem value="quinceañera">XV Años</SelectItem>
+                                                <SelectItem value="graduation">Graduation</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="revenue">Estimated Revenue (MXN)</Label>
+                                        <Input
+                                            id="revenue"
+                                            type="number"
+                                            value={newEvent.revenue}
+                                            onChange={(e) => setNewEvent(prev => ({ ...prev, revenue: Number(e.target.value) }))}
+                                            placeholder="Enter estimated revenue"
+                                        />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button variant="outline" onClick={() => setShowCreateEvent(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={handleCreateEvent}>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Create Event
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </motion.div>
 
-                {/* Stats Cards with Animations */}
+                {/* Stats Cards */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -445,7 +662,7 @@ export function VendorDashboard() {
                 >
                     {[
                         {
-                            title: t('vendorDashboard.stats.activeBookings'),
+                            title: 'Active Bookings',
                             value: stats.activeBookings.toString(),
                             icon: Calendar,
                             change: "+2",
@@ -453,7 +670,7 @@ export function VendorDashboard() {
                             trend: "up"
                         },
                         {
-                            title: t('vendorDashboard.stats.totalRevenue'),
+                            title: 'Total Revenue',
                             value: formatCurrency(stats.totalRevenue),
                             icon: DollarSign,
                             change: `+${stats.monthlyGrowth}%`,
@@ -461,7 +678,7 @@ export function VendorDashboard() {
                             trend: "up"
                         },
                         {
-                            title: t('vendorDashboard.stats.upcomingEvents'),
+                            title: 'Upcoming Events',
                             value: stats.upcomingEvents.toString(),
                             icon: Users,
                             change: "+1",
@@ -469,7 +686,7 @@ export function VendorDashboard() {
                             trend: "up"
                         },
                         {
-                            title: t('vendorDashboard.stats.satisfactionRate'),
+                            title: 'Satisfaction Rate',
                             value: `${stats.satisfactionRate}%`,
                             icon: Star,
                             change: "+5%",
@@ -501,7 +718,7 @@ export function VendorDashboard() {
                                                 <span className={`text-sm font-medium ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}>
                                                     {stat.change}
                                                 </span>
-                                                <span className="text-xs text-muted-foreground">{t('vendorLayout.stats.thisMonth')}</span>
+                                                <span className="text-xs text-muted-foreground">this month</span>
                                             </div>
                                         </div>
                                         <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} shadow-md`}>
@@ -510,9 +727,6 @@ export function VendorDashboard() {
                                     </div>
                                 </CardContent>
                             </Card>
-
-                            {/* Animated background */}
-                            <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10" />
                         </motion.div>
                     ))}
                 </motion.div>
@@ -522,19 +736,19 @@ export function VendorDashboard() {
                     <TabsList className="grid grid-cols-2 sm:grid-cols-4 lg:w-auto bg-muted/50 p-1 rounded-xl">
                         <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             <BarChart3 className="w-4 h-4 mr-2" />
-                            {t('ui.tabs.overview')}
+                            Overview
                         </TabsTrigger>
                         <TabsTrigger value="events" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             <Calendar className="w-4 h-4 mr-2" />
-                            {t('ui.tabs.events')}
+                            Events
                         </TabsTrigger>
                         <TabsTrigger value="payments" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             <DollarSign className="w-4 h-4 mr-2" />
-                            {t('ui.tabs.payments')}
+                            Payments
                         </TabsTrigger>
                         <TabsTrigger value="performance" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             <Trophy className="w-4 h-4 mr-2" />
-                            {t('ui.tabs.performance')}
+                            Performance
                         </TabsTrigger>
                     </TabsList>
 
@@ -547,21 +761,21 @@ export function VendorDashboard() {
                                     <div>
                                         <CardTitle className="text-xl flex items-center gap-2">
                                             <Calendar className="w-5 h-5" />
-                                            {t('vendorLayout.navigation.events')}
+                                            Recent Events
                                         </CardTitle>
                                         <CardDescription>
-                                            {t('vendorDashboard.overview')}
+                                            Your upcoming and recent events
                                         </CardDescription>
                                     </div>
-                                    <Button variant="ghost" size="sm" className="gap-2">
-                                        {t('common.viewAll')}
+                                    <Button variant="ghost" size="sm" className="gap-2" onClick={() => setActiveTab('events')}>
+                                        View All
                                         <ChevronRight className="w-4 h-4" />
                                     </Button>
                                 </CardHeader>
                                 <CardContent>
                                     <AnimatePresence>
                                         <div className="space-y-4">
-                                            {events.map((event, index) => (
+                                            {events.slice(0, 3).map((event, index) => (
                                                 <motion.div
                                                     key={event.id}
                                                     initial={{ opacity: 0, x: -20 }}
@@ -580,7 +794,7 @@ export function VendorDashboard() {
                                                             <div className="flex items-center gap-2 mb-1">
                                                                 <h3 className="font-semibold truncate">{event.title}</h3>
                                                                 <Badge variant="secondary" className={getStatusColor(event.status)}>
-                                                                    {getStatusText(event.status)}
+                                                                    {event.status}
                                                                 </Badge>
                                                             </div>
                                                             <p className="text-sm text-muted-foreground truncate">
@@ -588,7 +802,7 @@ export function VendorDashboard() {
                                                             </p>
                                                             <div className="mt-2">
                                                                 <div className="flex items-center justify-between text-xs mb-1">
-                                                                    <span>{t('ui.progress')}</span>
+                                                                    <span>Progress</span>
                                                                     <span>{event.progress}%</span>
                                                                 </div>
                                                                 <Progress value={event.progress} className="h-2" />
@@ -607,18 +821,22 @@ export function VendorDashboard() {
                                                                 </Button>
                                                             </DropdownMenuTrigger>
                                                             <DropdownMenuContent align="end">
-                                                                <DropdownMenuItem>
-                                                                    <Eye className="w-4 h-4 mr-2" />
-                                                                    {t('common.viewAll')}
+                                                                <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'confirmed')}>
+                                                                    <Check className="w-4 h-4 mr-2" />
+                                                                    Confirm Event
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem>
-                                                                    <Mail className="w-4 h-4 mr-2" />
-                                                                    {t('vendorDashboard.actions.messageCenter')}
+                                                                <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'completed')}>
+                                                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                                                    Mark Complete
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'cancelled')}>
+                                                                    <X className="w-4 h-4 mr-2" />
+                                                                    Cancel Event
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuSeparator />
-                                                                <DropdownMenuItem className="text-red-600">
-                                                                    <Calendar className="w-4 h-4 mr-2" />
-                                                                    {t('common.edit')}
+                                                                <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteEvent(event.id)}>
+                                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                                    Delete
                                                                 </DropdownMenuItem>
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
@@ -640,11 +858,11 @@ export function VendorDashboard() {
                                                 <Sparkles className="w-5 h-5 text-primary" />
                                             </div>
                                             <CardTitle className="text-lg font-semibold truncate">
-                                                {t('vendorDashboard.quickActions')}
+                                                Quick Actions
                                             </CardTitle>
                                         </div>
                                         <CardDescription className="text-sm line-clamp-2 text-muted-foreground/80">
-                                            {t('dashboard.messages.welcome')}
+                                            Common tasks and actions
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent>
@@ -658,6 +876,7 @@ export function VendorDashboard() {
                                                     <Button
                                                         variant="ghost"
                                                         className="h-full p-3 flex flex-col items-center justify-center gap-2 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all w-full min-h-[110px] group-hover:shadow-sm"
+                                                        onClick={() => toast.info(`Navigating to ${link.label}`)}
                                                     >
                                                         <div className={`p-2.5 rounded-lg bg-gradient-to-br ${link.color} group-hover:scale-105 transition-transform`}>
                                                             <link.icon className="w-4.5 h-4.5 text-white" />
@@ -682,10 +901,10 @@ export function VendorDashboard() {
                                     <CardHeader>
                                         <CardTitle className="text-xl flex items-center gap-2">
                                             <Target className="w-5 h-5" />
-                                            {t('vendorDashboard.performanceSummary')}
+                                            Performance Summary
                                         </CardTitle>
                                         <CardDescription>
-                                            {t('vendorDashboard.overview')}
+                                            Your key performance indicators
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
@@ -710,8 +929,8 @@ export function VendorDashboard() {
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-between text-xs text-muted-foreground">
-                                                    <span>{t('ui.current')}: {metric.value}%</span>
-                                                    <span>{t('ui.target')}: {metric.target}%</span>
+                                                    <span>Current: {metric.value}%</span>
+                                                    <span>Target: {metric.target}%</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -727,31 +946,78 @@ export function VendorDashboard() {
                             <CardHeader>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <CardTitle className="text-2xl">{t('dashboard.navigation.myEvents')}</CardTitle>
+                                        <CardTitle className="text-2xl">All Events</CardTitle>
                                         <CardDescription>
-                                            {t('vendorDashboard.overview')}
+                                            Manage your upcoming and past events
                                         </CardDescription>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Button variant="outline" size="sm">
+                                        <Button variant="outline" size="sm" onClick={() => toast.info("Filter functionality coming soon")}>
                                             <Filter className="w-4 h-4 mr-2" />
-                                            {t('common.filter')}
+                                            Filter
                                         </Button>
-                                        <Button>
+                                        <Button onClick={() => setShowCreateEvent(true)}>
                                             <Calendar className="w-4 h-4 mr-2" />
-                                            {t('vendorDashboard.actions.createEvent')}
+                                            Create Event
                                         </Button>
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="rounded-lg border p-8 text-center">
-                                    <CalendarDays className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                                    <h3 className="text-xl font-semibold mb-2">{t('vendorDashboard.actions.viewCalendar')}</h3>
-                                    <p className="text-muted-foreground mb-4">
-                                        {t('vendorDashboard.quickLinks.manageCalendarDesc')}
-                                    </p>
-                                    <Button>{t('common.viewAll')}</Button>
+                                <div className="space-y-4">
+                                    {events.map((event) => (
+                                        <div key={event.id} className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-purple-100 flex items-center justify-center">
+                                                    <Calendar className="w-8 h-8 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold">{event.title}</h3>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {event.client} • {event.date} at {event.time}
+                                                    </p>
+                                                    <div className="flex items-center gap-2 mt-2">
+                                                        <Badge className={getStatusColor(event.status)}>
+                                                            {event.status}
+                                                        </Badge>
+                                                        <Badge variant="outline">
+                                                            {getEventTypeDisplay(event.type)}
+                                                        </Badge>
+                                                        <span className="font-bold">{formatCurrency(event.revenue)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Progress value={event.progress} className="w-24" />
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="icon">
+                                                            <MoreVertical className="w-4 h-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'confirmed')}>
+                                                            <Check className="w-4 h-4 mr-2" />
+                                                            Confirm
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'completed')}>
+                                                            <CheckCircle className="w-4 h-4 mr-2" />
+                                                            Complete
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleUpdateEventStatus(event.id, 'cancelled')}>
+                                                            <X className="w-4 h-4 mr-2" />
+                                                            Cancel
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteEvent(event.id)}>
+                                                            <Trash2 className="w-4 h-4 mr-2" />
+                                                            Delete
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </CardContent>
                         </Card>
@@ -763,25 +1029,25 @@ export function VendorDashboard() {
                             <CardHeader>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <CardTitle className="text-2xl">{t('dashboard.navigation.payments')}</CardTitle>
+                                        <CardTitle className="text-2xl">Payments</CardTitle>
                                         <CardDescription>
-                                            {t('vendorDashboard.overview')}
+                                            Track and manage your payments
                                         </CardDescription>
                                     </div>
-                                    <Button variant="outline">
+                                    <Button variant="outline" onClick={handleExportReport}>
                                         <Download className="w-4 h-4 mr-2" />
-                                        {t('common.export')}
+                                        Export
                                     </Button>
                                 </div>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    {payments.map((payment, index) => (
+                                    {payments.map((payment) => (
                                         <motion.div
                                             key={payment.id}
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.1 }}
+                                            transition={{ delay: 0.1 }}
                                             className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                                         >
                                             <div className="flex items-center gap-4">
@@ -796,14 +1062,21 @@ export function VendorDashboard() {
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <Badge variant="outline">{payment.method}</Badge>
                                                         <Badge className={getStatusColor(payment.status)}>
-                                                            {getStatusText(payment.status)}
+                                                            {payment.status}
                                                         </Badge>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button variant="ghost" size="sm">
-                                                {t('common.viewAll')}
-                                            </Button>
+                                            <div className="flex items-center gap-2">
+                                                {payment.status === 'pending' && (
+                                                    <Button size="sm" onClick={() => handleProcessPayment(payment.id)}>
+                                                        Process
+                                                    </Button>
+                                                )}
+                                                <Button variant="ghost" size="sm" onClick={() => toast.info(`Viewing payment ${payment.id}`)}>
+                                                    View
+                                                </Button>
+                                            </div>
                                         </motion.div>
                                     ))}
                                 </div>
@@ -811,12 +1084,12 @@ export function VendorDashboard() {
                             <CardFooter className="border-t pt-6">
                                 <div className="w-full flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm text-muted-foreground">{t('vendorLayout.stats.thisMonth')}</p>
+                                        <p className="text-sm text-muted-foreground">This Month</p>
                                         <p className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</p>
                                     </div>
-                                    <Button className="gap-2">
+                                    <Button className="gap-2" onClick={() => toast.info("Share functionality coming soon")}>
                                         <Share2 className="w-4 h-4" />
-                                        {t('common.share')}
+                                        Share
                                     </Button>
                                 </div>
                             </CardFooter>
@@ -830,17 +1103,20 @@ export function VendorDashboard() {
                                 <CardHeader>
                                     <CardTitle className="text-xl flex items-center gap-2">
                                         <TrendingUp className="w-5 h-5" />
-                                        {t('vendorDashboard.metrics.revenueGrowth')}
+                                        Revenue Growth
                                     </CardTitle>
                                     <CardDescription>
-                                        {t('vendorDashboard.overview')}
+                                        Your revenue growth over time
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="h-64 flex items-center justify-center rounded-lg bg-gradient-to-br from-primary/5 to-purple-100 border">
                                         <div className="text-center">
                                             <BarChart3 className="w-12 h-12 mx-auto text-primary mb-4" />
-                                            <p className="text-muted-foreground">{t('common.loading')}</p>
+                                            <p className="text-muted-foreground">Chart visualization coming soon</p>
+                                            <Button variant="outline" className="mt-4" onClick={() => toast.info("Detailed analytics coming soon")}>
+                                                View Detailed Analytics
+                                            </Button>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -850,10 +1126,10 @@ export function VendorDashboard() {
                                 <CardHeader>
                                     <CardTitle className="text-xl flex items-center gap-2">
                                         <Users className="w-5 h-5" />
-                                        {t('vendorDashboard.metrics.clientSatisfaction')}
+                                        Client Satisfaction
                                     </CardTitle>
                                     <CardDescription>
-                                        {t('vendorDashboard.overview')}
+                                        Your client satisfaction ratings
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
@@ -866,7 +1142,7 @@ export function VendorDashboard() {
                                             </div>
                                             <Badge variant="outline" className="bg-green-50 text-green-700">
                                                 <TrendingUp className="w-3 h-3 mr-1" />
-                                                +12% {t('vendorLayout.stats.thisMonth')}
+                                                +12% this month
                                             </Badge>
                                         </div>
                                         <div className="space-y-2">
@@ -880,8 +1156,8 @@ export function VendorDashboard() {
                                         </div>
                                         <Separator />
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm text-muted-foreground">{t('common.viewAll')}</span>
-                                            <span className="font-semibold">142 {t('common.viewAll')}</span>
+                                            <span className="text-sm text-muted-foreground">Total Reviews</span>
+                                            <span className="font-semibold">142 reviews</span>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -892,7 +1168,7 @@ export function VendorDashboard() {
 
                 {/* Notifications Panel */}
                 <AnimatePresence>
-                    {notifications > 0 && (
+                    {unreadNotifications > 0 && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -904,35 +1180,71 @@ export function VendorDashboard() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <BellRing className="w-5 h-5 text-primary" />
-                                            <CardTitle className="text-lg">{t('ui.notifications.title')}</CardTitle>
+                                            <CardTitle className="text-lg">Notifications</CardTitle>
                                         </div>
-                                        <Badge>{notifications} {t('ui.notifications.new')}</Badge>
+                                        <Badge>{unreadNotifications} new</Badge>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8"
+                                            onClick={() => setShowNotifications(false)}
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </Button>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
-                                    <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/5">
-                                        <Gift className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-medium">{t('vendorDashboard.activities.bookingConfirmed')}</p>
-                                            <p className="text-sm text-muted-foreground">
-                                                {t('vendorDashboard.activities.corporateGala')}
-                                            </p>
-                                            <p className="text-xs text-primary mt-1">{getTimeAgoText(2, 'hour')}</p>
+                                    {notifications.slice(0, 2).map((notification) => (
+                                        <div key={notification.id} className="flex items-start gap-3 p-3 rounded-lg bg-primary/5">
+                                            {notification.type === 'success' && (
+                                                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            {notification.type === 'info' && (
+                                                <BellRing className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            {notification.type === 'warning' && (
+                                                <Clock className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            {notification.type === 'error' && (
+                                                <X className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            <div>
+                                                <p className="font-medium">{notification.title}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {notification.description}
+                                                </p>
+                                                <p className="text-xs text-primary mt-1">{notification.time}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    ))}
                                     <Button
                                         variant="ghost"
                                         size="sm"
                                         className="w-full justify-center"
-                                        onClick={() => setNotifications(0)}
+                                        onClick={handleMarkAllAsRead}
                                     >
-                                        {t('ui.notifications.markAllAsRead')}
+                                        Mark All as Read
                                     </Button>
                                 </CardContent>
                             </Card>
                         </motion.div>
                     )}
                 </AnimatePresence>
+
+                {/* Notification Bell */}
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="fixed bottom-6 left-6 rounded-full shadow-lg"
+                    onClick={() => setShowNotifications(!showNotifications)}
+                >
+                    <BellRing className="w-5 h-5" />
+                    {unreadNotifications > 0 && (
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                            {unreadNotifications}
+                        </span>
+                    )}
+                </Button>
             </div>
         </TooltipProvider>
     )

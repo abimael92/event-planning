@@ -41,7 +41,6 @@ interface Vendor {
     services: string[]
 }
 
-// Real Chihuahua vendors data with English category keys
 const chihuahuaVendors: Vendor[] = [
     // Music vendors
     {
@@ -49,7 +48,7 @@ const chihuahuaVendors: Vendor[] = [
         name: "Mariachi Los Chihuahuenses",
         category: "music",
         subcategory: "Mariachi",
-        description: "Traditional Chihuahua mariachi with over 20 years of experience in social events.",
+        description: "Mariachi tradicional de Chihuahua con más de 20 años de experiencia en eventos sociales.",
         rating: 4.8,
         reviews: 124,
         location: "Centro, Chihuahua",
@@ -61,14 +60,14 @@ const chihuahuaVendors: Vendor[] = [
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=300&fit=crop",
         featured: true,
-        services: ["Live music", "Serenades", "Traditional repertoire", "Full group"]
+        services: ["Música en vivo", "Serenatas", "Repertorio tradicional", "Grupo completo"]
     },
     {
         id: "2",
         name: "DJ Electro Norte",
         category: "music",
         subcategory: "DJ",
-        description: "DJ specialized in social events with state-of-the-art equipment and extensive music library.",
+        description: "DJ especializado en eventos sociales con equipo de última generación y amplia biblioteca musical.",
         rating: 4.6,
         reviews: 89,
         location: "Zona Dorada, Chihuahua",
@@ -79,14 +78,14 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=300&fit=crop",
-        services: ["Electronic music", "Popular music", "Light effects", "Karaoke"]
+        services: ["Música electrónica", "Música popular", "Efectos de luz", "Karaoke"]
     },
     {
         id: "3",
         name: "Banda Los Norteños",
         category: "music",
-        subcategory: "Band",
-        description: "Norteño band with the best regional hits to liven up your event.",
+        subcategory: "Banda",
+        description: "Banda norteña con los mejores éxitos regionales para animar tu evento.",
         rating: 4.7,
         reviews: 156,
         location: "Campus UACH, Chihuahua",
@@ -96,7 +95,7 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$$",
         image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w-400&h=300&fit=crop",
-        services: ["Norteño music", "Full group", "Live show", "Wedding music"]
+        services: ["Música norteña", "Grupo completo", "Show en vivo", "Música para bodas"]
     },
 
     // Decoration vendors
@@ -104,8 +103,8 @@ const chihuahuaVendors: Vendor[] = [
         id: "4",
         name: "Decoraciones Elegantes Chihuahua",
         category: "decoration",
-        subcategory: "Event Decoration",
-        description: "Professional decoration for all types of events with custom designs.",
+        subcategory: "Decoración de Eventos",
+        description: "Decoración profesional para todo tipo de eventos con diseños personalizados.",
         rating: 4.9,
         reviews: 203,
         location: "Zona Tecnológico, Chihuahua",
@@ -117,14 +116,14 @@ const chihuahuaVendors: Vendor[] = [
         priceRange: "$$$",
         image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&h=300&fit=crop",
         featured: true,
-        services: ["Floral decoration", "Centerpieces", "Decorative arches", "Special lighting"]
+        services: ["Decoración floral", "Centros de mesa", "Arcos decorativos", "Iluminación especial"]
     },
     {
         id: "5",
         name: "Flores del Desierto",
         category: "decoration",
-        subcategory: "Florist",
-        description: "Unique floral arrangements with seasonal flowers and exclusive designs.",
+        subcategory: "Florería",
+        description: "Arreglos florales únicos con flores de temporada y diseños exclusivos.",
         rating: 4.7,
         reviews: 178,
         location: "Campo Bello, Chihuahua",
@@ -135,7 +134,7 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1560185007-cde436f5a827?w=400&h=300&fit=crop",
-        services: ["Bridal bouquets", "Centerpieces", "Floral decoration", "Custom arrangements"]
+        services: ["Ramos de novia", "Centros de mesa", "Decoración floral", "Arreglos personalizados"]
     },
 
     // Food vendors
@@ -144,7 +143,7 @@ const chihuahuaVendors: Vendor[] = [
         name: "Banquetes La Casona",
         category: "food",
         subcategory: "Catering",
-        description: "Gourmet catering service specializing in Mexican and international cuisine.",
+        description: "Servicio de catering gourmet especializado en cocina mexicana e internacional.",
         rating: 4.8,
         reviews: 245,
         location: "Centro Histórico, Chihuahua",
@@ -156,14 +155,14 @@ const chihuahuaVendors: Vendor[] = [
         priceRange: "$$$",
         image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
         featured: true,
-        services: ["Buffet", "Main course", "Desserts", "Beverages", "Waiters"]
+        services: ["Buffet", "Plato fuerte", "Postres", "Bebidas", "Meseros"]
     },
     {
         id: "7",
         name: "Tacos Don Chuy",
         category: "food",
         subcategory: "Food Truck",
-        description: "Authentic northern tacos for informal events and outdoor celebrations.",
+        description: "Tacos norteños auténticos para eventos informales y celebraciones al aire libre.",
         rating: 4.5,
         reviews: 312,
         location: "Periférico de la Juventud, Chihuahua",
@@ -173,7 +172,7 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$",
         image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop",
-        services: ["Tacos", "Quesadillas", "Beverages", "Traditional sauces"]
+        services: ["Tacos", "Quesadillas", "Bebidas", "Salsas tradicionales"]
     },
 
     // Locations vendors
@@ -181,8 +180,8 @@ const chihuahuaVendors: Vendor[] = [
         id: "8",
         name: "Salón Los Arcos",
         category: "venues",
-        subcategory: "Event Hall",
-        description: "Elegant hall for weddings, quinceañeras, and corporate events with capacity for 500 people.",
+        subcategory: "Salón de Eventos",
+        description: "Salón elegante para bodas, quinceañeras y eventos corporativos con capacidad para 500 personas.",
         rating: 4.9,
         reviews: 189,
         location: "Zona Norte, Chihuahua",
@@ -194,14 +193,14 @@ const chihuahuaVendors: Vendor[] = [
         priceRange: "$$$$",
         image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop",
         featured: true,
-        services: ["Complete space", "Furniture", "Basic sound", "Parking", "Event coordinator"]
+        services: ["Espacio completo", "Mobiliario", "Sonido básico", "Estacionamiento", "Coordinador de eventos"]
     },
     {
         id: "9",
         name: "Iglesia San Francisco",
         category: "venues",
-        subcategory: "Church",
-        description: "Beautiful historic church for all types of religious ceremonies.",
+        subcategory: "Iglesia",
+        description: "Hermosa iglesia histórica para todo tipo de ceremonias religiosas.",
         rating: 4.7,
         reviews: 95,
         location: "Centro, Chihuahua",
@@ -211,14 +210,14 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1544830288-5a5297964c96?w=400&h=300&fit=crop",
-        services: ["Religious ceremonies", "Chapel", "Choirs", "Additional services"]
+        services: ["Ceremonias religiosas", "Capilla", "Coro", "Servicios adicionales"]
     },
     {
         id: "10",
         name: "Jardines del Parque",
         category: "venues",
-        subcategory: "Gardens",
-        description: "Natural gardens for outdoor events with panoramic views.",
+        subcategory: "Jardines",
+        description: "Jardines naturales para eventos al aire libre con vistas panorámicas.",
         rating: 4.6,
         reviews: 134,
         location: "Zona Poniente, Chihuahua",
@@ -228,7 +227,7 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$$",
         image: "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=400&h=300&fit=crop",
-        services: ["Open space", "Play area", "Food zone", "Parking"]
+        services: ["Espacio abierto", "Área de juegos", "Zona de alimentos", "Estacionamiento"]
     },
 
     // Photography vendors
@@ -236,8 +235,8 @@ const chihuahuaVendors: Vendor[] = [
         id: "11",
         name: "Fotografía Memoria Viva",
         category: "photography",
-        subcategory: "Photography",
-        description: "Professional photographers specialized in capturing the most important moments of your event.",
+        subcategory: "Fotografía",
+        description: "Fotógrafos profesionales especializados en capturar los momentos más importantes de tu evento.",
         rating: 4.9,
         reviews: 287,
         location: "Zona Dorada, Chihuahua",
@@ -249,7 +248,7 @@ const chihuahuaVendors: Vendor[] = [
         priceRange: "$$$",
         image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=400&h=300&fit=crop",
         featured: true,
-        services: ["Digital photography", "Albums", "Professional video", "Pre-sessions", "Instant photos"]
+        services: ["Fotografía digital", "Álbumes", "Video profesional", "Sesiones previas", "Fotos instantáneas"]
     },
 
     // Transportation vendors
@@ -257,18 +256,18 @@ const chihuahuaVendors: Vendor[] = [
         id: "12",
         name: "Transporte Elegante Chihuahua",
         category: "transportation",
-        subcategory: "Transportation",
-        description: "Fleet of luxury vehicles to transport your event guests.",
+        subcategory: "Transporte",
+        description: "Flotilla de vehículos de lujo para transportar a los invitados de tu evento.",
         rating: 4.5,
         reviews: 167,
-        location: "Airport, Chihuahua",
+        location: "Aeropuerto, Chihuahua",
         contact: {
             phone: "+52 614 234 8901",
             email: "reservaciones@transporteelegante.com"
         },
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop",
-        services: ["Limousines", "Buses", "Professional driver", "Vehicle decoration"]
+        services: ["Limoninas", "Autobuses", "Chofer profesional", "Decoración de vehículos"]
     },
 
     // Entertainment vendors
@@ -276,8 +275,8 @@ const chihuahuaVendors: Vendor[] = [
         id: "13",
         name: "Show de Magia Chihuahua",
         category: "entertainment",
-        subcategory: "Shows",
-        description: "Professional magicians to entertain children and adults at your event.",
+        subcategory: "Espectáculos",
+        description: "Magos profesionales para entretener a niños y adultos en tu evento.",
         rating: 4.8,
         reviews: 142,
         location: "Centro, Chihuahua",
@@ -287,14 +286,14 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=400&h=300&fit=crop",
-        services: ["Magic show", "Interactive", "All ages", "Flexible duration"]
+        services: ["Show de magia", "Interactivo", "Todas las edades", "Duración flexible"]
     },
     {
         id: "14",
         name: "Pastelería Dulce Sabor",
         category: "food",
-        subcategory: "Pastry",
-        description: "Custom cakes for weddings, quinceañeras, and special events.",
+        subcategory: "Repostería",
+        description: "Pasteles personalizados para bodas, quinceañeras y eventos especiales.",
         rating: 4.9,
         reviews: 198,
         location: "Zona Tecnológico, Chihuahua",
@@ -305,7 +304,7 @@ const chihuahuaVendors: Vendor[] = [
         },
         priceRange: "$$",
         image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=300&fit=crop",
-        services: ["Wedding cakes", "Individual desserts", "Custom designs", "Home delivery"]
+        services: ["Pasteles de boda", "Postres individuales", "Diseños personalizados", "Entrega a domicilio"]
     }
 ]
 
@@ -546,62 +545,116 @@ export default function VendorsPage() {
                                         </div>
                                     </div>
 
-                                    <CardHeader className="pb-2">
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex-1 min-w-0">
-                                                <CardTitle className="text-base font-semibold truncate">{vendor.name}</CardTitle>
-                                                <CardDescription className="flex items-center gap-1 mt-1">
-                                                    <MapPin className="h-3 w-3" />
-                                                    <span className="text-xs truncate">{vendor.location}</span>
+                                    <CardHeader >
+                                        <div className="grid grid-cols-[1fr_auto] items-start gap-3">
+                                            {/* Left section - will never push right section */}
+                                            <div className="min-w-0 relative group">
+                                                <CardTitle className="text-base font-semibold truncate text-gray-900">
+                                                    {vendor.name}
+                                                </CardTitle>
+
+                                                {/* Hover overlay */}
+                                                <CardTitle className="absolute left-0 top-0 z-50 whitespace-nowrap bg-white hidden group-hover:block px-0 m-0">
+                                                    {vendor.name}
+                                                </CardTitle>
+
+                                                <CardDescription className="mt-2">
+                                                    <div className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg max-w-full cursor-pointer">
+                                                        <MapPin className="h-3 w-3 text-blue-600 shrink-0 flex-shrink-0" />
+                                                        <span className="text-xs font-medium text-blue-800 truncate max-w-[180px]">
+                                                            {vendor.location}
+                                                        </span>
+                                                    </div>
                                                 </CardDescription>
                                             </div>
-                                            <div className="flex items-center gap-1 ml-2">
-                                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                                <span className="font-semibold text-sm">{vendor.rating}</span>
-                                                <span className="text-gray-500 text-xs">({vendor.reviews})</span>
+
+                                            {/* Right section - fixed width */}
+                                            <div className="flex-shrink-0">
+                                                <div className="flex items-center gap-1 px-3 py-2 border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg whitespace-nowrap cursor-pointer">
+                                                    <Star className="h-3 w-3 fill-amber-500 text-amber-500 flex-shrink-0" />
+                                                    <span className="font-bold text-sm text-amber-800">{vendor.rating}</span>
+                                                    <span className="text-amber-600 text-xs">({vendor.reviews})</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </CardHeader>
 
-                                    <CardContent className="pb-2">
-                                        <p className="text-gray-600 text-xs line-clamp-2 mb-2">{vendor.description}</p>
 
-                                        {/* Price Range */}
-                                        <div className="flex items-center justify-between mb-2">
-                                            <Badge variant="outline" className="text-xs font-medium">
-                                                {vendor.priceRange}
-                                            </Badge>
-                                            <span className="text-xs text-gray-500">{t('providers.vendorCard.priceRange')}</span>
-                                        </div>
+                                    <CardContent >
+
+                                        {/* Description */}
+                                        <p className="text-gray-600 text-md line-clamp-3 mb-2">{vendor.description}</p>
 
                                         {/* Services */}
-                                        <div className="space-y-1">
-                                            <p className="text-xs font-medium text-gray-700">{t('providers.vendorCard.services')}</p>
-                                            <div className="flex flex-wrap gap-1">
+                                        <div className="mt-3">
+                                            <p className="text-md font-bold text-gray-800 mb-1">{t('providers.vendorCard.services')}</p>
+
+                                            <div className="flex flex-wrap gap-2 overflow-x-auto p-1 mb-2">
                                                 {vendor.services.slice(0, 3).map((service, idx) => (
-                                                    <Badge key={idx} variant="secondary" className="text-xs py-0">
+                                                    <Badge
+                                                        key={idx}
+                                                        variant="secondary"
+                                                        className={`
+          text-sm px-2 py-1 rounded-lg bg-indigo-200/20 text-indigo-800 border-indigo-800
+          transition-all duration-150 cursor-pointer
+          hover:scale-105 hover:bg-indigo-50
+        `}
+                                                    >
                                                         {service}
                                                     </Badge>
                                                 ))}
                                                 {vendor.services.length > 3 && (
-                                                    <Badge variant="secondary" className="text-xs py-0">
+                                                    <Badge variant="secondary" className="text-sm px-2 py-1 rounded-lg bg-indigo-200/20 text-indigo-800 border-indigo-800 cursor-pointer">
                                                         +{vendor.services.length - 3}
                                                     </Badge>
                                                 )}
                                             </div>
                                         </div>
+
+                                        {/* Price Range */}
+                                        <div className="flex items-center justify-between mb-3 px-3 py-0.5 bg-gradient-to-r from-indigo-50/60 to-pink-50/60 rounded-xl border border-indigo-100 cursor-pointer">
+                                            <span className="text-sm font-semibold text-indigo-700">
+                                                {t('providers.vendorCard.priceRange')}
+                                            </span>
+                                            <div className="flex flex-col items-end">
+                                                <div className={`
+            text-xs font-medium px-3 py-0.5 rounded-full text-center
+            ${vendor.priceRange === "$" ? "bg-emerald-100 text-emerald-800" : ""}
+            ${vendor.priceRange === "$$" ? "bg-blue-100 text-blue-800" : ""}
+            ${vendor.priceRange === "$$$" ? "bg-purple-100 text-purple-800" : ""}
+            ${vendor.priceRange === "$$$$" ? "bg-amber-100 text-amber-800" : ""}
+        `}>
+                                                    <div>
+                                                        {vendor.priceRange === "$" && "Económico"}
+                                                        {vendor.priceRange === "$$" && "Moderado"}
+                                                        {vendor.priceRange === "$$$" && "Premium"}
+                                                        {vendor.priceRange === "$$$$" && "Lujo"}
+                                                    </div>
+                                                    <div className={`
+                text-xs font-bold
+                ${vendor.priceRange === "$" ? "text-emerald-700" : ""}
+                ${vendor.priceRange === "$$" ? "text-blue-700" : ""}
+                ${vendor.priceRange === "$$$" ? "text-purple-700" : ""}
+                ${vendor.priceRange === "$$$$" ? "text-amber-700" : ""}
+            `}>
+                                                        {vendor.priceRange}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </CardContent>
 
                                     <CardFooter className="pt-2 border-t flex flex-col gap-2">
-                                        <div className="flex items-center gap-2 text-xs text-gray-600 w-full">
+                                        {/* <div className="flex items-center gap-2 text-xs text-gray-600 w-full">
                                             <Phone className="h-3 w-3" />
                                             <span className="truncate">{vendor.contact.phone}</span>
-                                        </div>
+                                        </div> */}
 
                                         <div className="flex gap-2 w-full">
                                             <Button
                                                 size="sm"
-                                                className="flex-1 text-xs h-8"
+                                                className="flex-1 text-sm h-8"
                                                 onClick={() => window.open(`tel:${vendor.contact.phone}`)}
                                             >
                                                 {t('providers.vendorCard.call')}
@@ -609,7 +662,7 @@ export default function VendorsPage() {
                                             <Button
                                                 size="sm"
                                                 variant="outline"
-                                                className="flex-1 text-xs h-8"
+                                                className="flex-1 text-sm h-8"
                                                 onClick={() => window.open(`mailto:${vendor.contact.email}`)}
                                             >
                                                 <Mail className="h-3 w-3 mr-1" />
@@ -622,7 +675,7 @@ export default function VendorsPage() {
                                                     className="h-8 w-8 p-0"
                                                     onClick={() => window.open(vendor.contact.website, '_blank')}
                                                 >
-                                                    <Globe className="h-3 w-3" />
+                                                    <Globe className="h-4 w-4" />
                                                 </Button>
                                             )}
                                         </div>
