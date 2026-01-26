@@ -46,25 +46,23 @@ export class AppError extends Error {
 	 * Convert error to a safe object for logging/API responses
 	 */
 	toJSON(): Record<string, unknown> {
-		// Create a conditional object for cause to avoid TypeScript spread error
-		const causeProperty = this.cause
-			? {
-					cause:
-						this.cause instanceof Error
-							? this.cause.message
-							: String(this.cause),
-				}
-			: {};
-
-		return {
+		const result: Record<string, unknown> = {
 			name: this.name,
 			message: this.message,
 			code: this.code,
 			statusCode: this.statusCode,
 			context: this.context,
 			isOperational: this.isOperational,
-			...causeProperty,
 		};
+
+		// Add cause if it exists
+		if (this.cause) {
+			result.cause = this.cause instanceof Error
+				? this.cause.message
+				: String(this.cause);
+		}
+
+		return result;
 	}
 }
 

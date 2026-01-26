@@ -124,15 +124,25 @@ describe('Error Utilities', () => {
     })
 
     it('should include details in development', () => {
+      // Mock NODE_ENV for this test
       const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'development'
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'development',
+        writable: true,
+        configurable: true,
+      })
       
       const error = new AppError('Test error', ErrorCodes.INTERNAL_ERROR)
       const response = createSafeErrorResponse(error, true)
       
       expect(response.error).toHaveProperty('details')
       
-      process.env.NODE_ENV = originalEnv
+      // Restore original value
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: originalEnv,
+        writable: true,
+        configurable: true,
+      })
     })
   })
 })
