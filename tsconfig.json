@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"ignoreDeprecations": "6.0",
 		"baseUrl": ".",
 		"target": "ES2017",
 		"lib": ["dom", "dom.iterable", "esnext"],
@@ -29,7 +28,6 @@
 			"@/lib/*": ["./lib/*"],
 			"@/auth/*": ["./components/auth/*"],
 			"@/data/*": ["./data/*"]
-			
 		}
 	},
 	"include": [
