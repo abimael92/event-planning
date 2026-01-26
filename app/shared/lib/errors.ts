@@ -218,14 +218,18 @@ export function createSafeErrorResponse(
 	const normalized = normalizeError(error);
 	const isDevelopment = process.env.NODE_ENV === 'development';
 
-	return {
-		error: {
-			message: getUserFriendlyMessage(normalized),
-			code: normalized.code,
-			...(includeDetails &&
-				isDevelopment && {
-					details: normalized.toJSON(),
-				}),
-		},
+	const errorObj: {
+		message: string;
+		code: string;
+		details?: unknown;
+	} = {
+		message: getUserFriendlyMessage(normalized),
+		code: normalized.code,
 	};
+
+	if (includeDetails && isDevelopment) {
+		errorObj.details = normalized.toJSON();
+	}
+
+	return { error: errorObj };
 }
