@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
 import { AuthProvider } from "./contexts/auth-context"
+import { ErrorBoundary } from "../components/error-boundary"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -74,9 +75,11 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-gradient-to-br from-purple-800/60 via-pink-800/40 to-blue-800/60" />
         </div>
 
-        <AuthProvider>
-          <Suspense fallback={null}>{children}</Suspense>
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <Suspense fallback={null}>{children}</Suspense>
+          </AuthProvider>
+        </ErrorBoundary>
         <Analytics />
       </body>
     </html>
