@@ -1,0 +1,12 @@
+
+[243:0x7abf000]    28512 ms: Scavenge (interleaved) 2019.9 (2033.0) -> 2012.7 (2048.4) MB, pooled: 0 MB, 3.64 / 0.00 ms  (average mu = 0.270, current mu = 0.219) allocation failure; 
+[243:0x7abf000]    29727 ms: Mark-Compact (reduce) 2022.3 (2050.7) -> 2011.0 (2017.3) MB, pooled: 0 MB, 20.30 / 0.00 ms  (+ 1139.7 ms in 117 steps since start of marking, biggest step 28.7 ms, walltime since start of marking 1215 ms) (average mu = 0.231, 
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+ 1: 0x72dece node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/node24/bin/node]
+ 2: 0xba1b20  [/node24/bin/node]
+ 3: 0xba1c0f  [/node24/bin/node]
+ 4: 0xe3a745  [/node24/bin/node]
+
+
+ keeps showing eeros on deploymetn vercel
