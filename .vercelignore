@@ -1,0 +1,36 @@
+# Vercel ignore file
+# Files and directories to exclude from Vercel deployments
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Development files
+.vscode/
+.idea/
+*.log
+*.local
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage/
+
+# Documentation (optional - remove if you want docs deployed)
+docs/
+*.md
+!README.md
+
+# Config files that shouldn't be deployed
+.env*.local
+vitest.config.ts
+vitest.setup.ts
