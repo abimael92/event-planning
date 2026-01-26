@@ -13,7 +13,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:run": "vitest run",
-    "prebuild": "pnpm lint && pnpm type-check"
+    "prebuild": "node scripts/prebuild.js",
+    "build:local": "pnpm lint && pnpm type-check && pnpm build"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
