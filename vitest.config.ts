@@ -28,6 +28,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './'),
       '@/components': path.resolve(__dirname, './components'),
       '@/hooks': path.resolve(__dirname, './hooks'),
+      '@/shared': path.resolve(__dirname, './app/shared'),
       '@/app/shared': path.resolve(__dirname, './app/shared'),
       '@/data': path.resolve(__dirname, './data'),
     },

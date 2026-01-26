@@ -1,17 +1,20 @@
 "use client"
 
 import React, { Component, ErrorInfo, ReactNode } from "react"
-import { logger } from "@/shared/lib/logger"
+import { logger } from "../app/shared/lib/logger"
+import { normalizeError, getUserFriendlyMessage, type AppError } from "../app/shared/lib/errors"
 
 interface Props {
   children: ReactNode
   fallback?: ReactNode
   onError?: (error: Error, errorInfo: ErrorInfo) => void
+  showDetails?: boolean // Only show technical details in development
 }
 
 interface State {
   hasError: boolean
   error: Error | null
+  errorInfo: ErrorInfo | null
 }
 
 /**
@@ -31,10 +34,11 @@ export class ErrorBoundary extends Component<Props, State> {
     this.state = {
       hasError: false,
       error: null,
+      errorInfo: null,
     }
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): Partial<State> {
     // Update state so the next render will show the fallback UI
     return {
       hasError: true,
@@ -43,10 +47,24 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error to our centralized logger
-    logger.error("ErrorBoundary caught an error", error, {
+    // Normalize the error for consistent handling
+    const normalized = normalizeError(error, {
       componentStack: errorInfo.componentStack,
       errorBoundary: true,
+    })
+
+    // Store error info for display
+    this.setState({
+      error: normalized,
+      errorInfo,
+    })
+
+    // Log error to our centralized logger
+    logger.error("ErrorBoundary caught an error", normalized, {
+      componentStack: errorInfo.componentStack,
+      errorBoundary: true,
+      errorCode: normalized.code,
+      isOperational: normalized.isOperational,
     })
 
     // Call custom error handler if provided
@@ -59,6 +77,7 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({
       hasError: false,
       error: null,
+      errorInfo: null,
     })
   }
 
@@ -69,7 +88,18 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback
       }
 
-      // Default error UI
+      const normalized = this.state.error 
+        ? normalizeError(this.state.error)
+        : null
+      
+      const userMessage = normalized 
+        ? getUserFriendlyMessage(normalized)
+        : "We're sorry, but something unexpected happened. Please try refreshing the page."
+
+      const showDetails = this.props.showDetails ?? (process.env.NODE_ENV === "development")
+      const isDevelopment = process.env.NODE_ENV === "development"
+
+      // Default error UI - user-safe, no technical details in production
       return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
           <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-xl">
@@ -93,15 +123,37 @@ export class ErrorBoundary extends Component<Props, State> {
                 Something went wrong
               </h1>
               <p className="mb-6 text-gray-600">
-                We're sorry, but something unexpected happened. Please try refreshing the page.
+                {userMessage}
               </p>
-              {process.env.NODE_ENV === "development" && this.state.error && (
+              {showDetails && normalized && (
                 <div className="mb-6 rounded-lg bg-red-50 p-4 text-left">
                   <p className="mb-2 text-sm font-semibold text-red-800">Error Details:</p>
-                  <pre className="overflow-auto text-xs text-red-700">
-                    {this.state.error.toString()}
-                    {this.state.error.stack && `\n\n${this.state.error.stack}`}
-                  </pre>
+                  <div className="space-y-2 text-xs text-red-700">
+                    <div>
+                      <span className="font-semibold">Code:</span> {normalized.code}
+                    </div>
+                    {normalized.message && (
+                      <div>
+                        <span className="font-semibold">Message:</span> {normalized.message}
+                      </div>
+                    )}
+                    {isDevelopment && this.state.error?.stack && (
+                      <details className="mt-2">
+                        <summary className="cursor-pointer font-semibold">Stack Trace</summary>
+                        <pre className="mt-2 overflow-auto whitespace-pre-wrap text-xs">
+                          {this.state.error.stack}
+                        </pre>
+                      </details>
+                    )}
+                    {isDevelopment && this.state.errorInfo?.componentStack && (
+                      <details className="mt-2">
+                        <summary className="cursor-pointer font-semibold">Component Stack</summary>
+                        <pre className="mt-2 overflow-auto whitespace-pre-wrap text-xs">
+                          {this.state.errorInfo.componentStack}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
                 </div>
               )}
               <div className="flex gap-4">

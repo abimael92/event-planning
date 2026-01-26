@@ -1,0 +1,14 @@
+# ESLint ignore file
+node_modules/
+.next/
+out/
+dist/
+build/
+.vercel/
+coverage/
+*.config.js
+*.config.ts
+*.config.mjs
+vitest.config.ts
+vitest.setup.ts
+scripts/

@@ -6,6 +6,7 @@ import { Suspense } from "react"
 import "./globals.css"
 import { AuthProvider } from "./contexts/auth-context"
 import { ErrorBoundary } from "../components/error-boundary"
+import { GlobalErrorHandler } from "../components/global-error-handler"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -75,6 +76,7 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-gradient-to-br from-purple-800/60 via-pink-800/40 to-blue-800/60" />
         </div>
 
+        <GlobalErrorHandler />
         <ErrorBoundary>
           <AuthProvider>
             <Suspense fallback={null}>{children}</Suspense>
