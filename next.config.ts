@@ -38,6 +38,9 @@ const nextConfig: NextConfig = {
 	// Vercel-specific optimizations
 	compress: true,
 	poweredByHeader: false,
+	// Turbopack configuration (Next.js 16 uses Turbopack by default)
+	// Empty config silences the warning - Turbopack optimizations are automatic
+	turbopack: {},
 };
 
 export default nextConfig;
