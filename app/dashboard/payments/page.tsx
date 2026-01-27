@@ -18,17 +18,17 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { DollarSign, CreditCard, Calendar, CheckCircle, Clock, AlertCircle, TrendingUp, Download, Filter } from "lucide-react"
-import { useTranslation } from "@/hooks/use-translation"
+import { DollarSign, CreditCard, Calendar, CheckCircle, Clock, AlertCircle, Download, Filter } from "lucide-react"
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
+import { ProtectedRoute } from "@/components/auth/protected-route"
+import { mockPayments } from "@/data/mock-data"
 
-const mockPayments = [
+const payments = [
     {
         id: "1",
         event: "Boda de Kathya y Erick",
@@ -76,12 +76,11 @@ const mockPayments = [
 ]
 
 export default function PaymentsPage() {
-    const { t } = useTranslation()
     const [activeTab, setActiveTab] = useState("all")
 
     const filteredPayments = activeTab === "all"
-        ? mockPayments
-        : mockPayments.filter(payment => payment.status === activeTab)
+        ? payments
+        : payments.filter(payment => payment.status === activeTab)
 
     const stats = {
         total: 63000,
@@ -92,90 +91,95 @@ export default function PaymentsPage() {
     }
 
     return (
-        <DashboardLayout>
+        <ProtectedRoute>
+            <DashboardLayout>
             <div className="w-full space-y-6 p-4 md:p-6 overflow-x-hidden">
             
-                {/* Hero Section */}
-                <div className="relative overflow-hidden rounded-lg md:rounded-xl p-4 md:p-6 lg:p-8 w-full animate-gradient-shift">
-                    <div className="relative z-10 text-white w-full">
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-                            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div className=" gap-2">
-                            <h1 className="text-2xl md:text-3xl font-heading font-bold">{t('dashboard.navigation.payments')}</h1>
-                            <p className="text-gray-50">Gestiona todos tus pagos y transacciones</p>
-                            </div>
-
-                            {/* Event Countdown */}
-                                <div className="flex gap-2">
-                                    <Button variant="outline">
-                                        <Download className="w-4 h-4 mr-2" />
-                                        Exportar
-                                    </Button>
-                                    <Button className="gradient-royal hover:glow-primary transition-all duration-300">
-                                        <CreditCard className="w-4 h-4 mr-2" />
-                                        Nuevo Pago
-                                    </Button>
-                                </div>
-                        </motion.div>
+                {/* Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold">Pagos</h1>
+                        <p className="text-muted-foreground">Gestiona todos tus pagos y transacciones</p>
                     </div>
-
-                    {/* Animated background particles */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        {[...Array(10)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                className="absolute w-1.5 h-1.5 bg-white/20 rounded-full"
-                                style={{
-                                    left: `${Math.random() * 100}%`,
-                                    top: `${Math.random() * 100}%`,
-                                }}
-                                animate={{
-                                    y: [0, -15, 0],
-                                    opacity: [0.2, 0.6, 0.2],
-                                }}
-                                transition={{
-                                    duration: 3 + Math.random() * 2,
-                                    repeat: Number.POSITIVE_INFINITY,
-                                    delay: Math.random() * 2,
-                                }}
-                            />
-                        ))}
+                    <div className="flex gap-2">
+                        <Button variant="outline">
+                            <Download className="w-4 h-4 mr-2" />
+                            Exportar
+                        </Button>
+                        <Button>
+                            <CreditCard className="w-4 h-4 mr-2" />
+                            Nuevo Pago
+                        </Button>
                     </div>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    {[
-                        { label: "Total Pagado", value: `$${(stats.paid / 1000).toFixed(0)}k`, icon: CheckCircle, color: "from-green-500 to-emerald-500", change: "+18%" },
-                        { label: "Pendientes", value: `$${(stats.pending / 1000).toFixed(0)}k`, icon: Clock, color: "from-amber-500 to-orange-500", change: "+2" },
-                        { label: "Vencidos", value: `$${(stats.overdue / 1000).toFixed(0)}k`, icon: AlertCircle, color: "from-red-500 to-pink-500", change: "-1" },
-                        { label: "Próximos", value: `$${(stats.upcoming / 1000).toFixed(0)}k`, icon: Calendar, color: "from-blue-500 to-cyan-500", change: "+3" },
-                        { label: "Total General", value: `$${(stats.total / 1000).toFixed(0)}k`, icon: DollarSign, color: "from-purple-500 to-violet-500", change: "+12%" },
-                    ].map((stat, index) => (
-                        <motion.div
-                            key={stat.label}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            <Card className="hover-lift">
-                                <CardContent className="p-4">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <p className="text-2xl font-bold">{stat.value}</p>
-                                            <p className="text-sm text-muted-foreground">{stat.label}</p>
-                                            <Badge variant="secondary" className="mt-1">
-                                                {stat.change}
-                                            </Badge>
-                                        </div>
-                                        <div className={`p-3 rounded-full bg-gradient-to-br ${stat.color}`}>
-                                            <stat.icon className="w-5 h-5 text-white" />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    ))}
+                    <Card>
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-2xl font-bold">${(stats.paid / 1000).toFixed(0)}k</p>
+                                    <p className="text-sm text-muted-foreground">Total Pagado</p>
+                                </div>
+                                <div className="p-3 rounded-full bg-green-100">
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-2xl font-bold">${(stats.pending / 1000).toFixed(0)}k</p>
+                                    <p className="text-sm text-muted-foreground">Pendientes</p>
+                                </div>
+                                <div className="p-3 rounded-full bg-amber-100">
+                                    <Clock className="w-5 h-5 text-amber-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-2xl font-bold">${(stats.overdue / 1000).toFixed(0)}k</p>
+                                    <p className="text-sm text-muted-foreground">Vencidos</p>
+                                </div>
+                                <div className="p-3 rounded-full bg-red-100">
+                                    <AlertCircle className="w-5 h-5 text-red-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-2xl font-bold">${(stats.upcoming / 1000).toFixed(0)}k</p>
+                                    <p className="text-sm text-muted-foreground">Próximos</p>
+                                </div>
+                                <div className="p-3 rounded-full bg-blue-100">
+                                    <Calendar className="w-5 h-5 text-blue-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-2xl font-bold">${(stats.total / 1000).toFixed(0)}k</p>
+                                    <p className="text-sm text-muted-foreground">Total General</p>
+                                </div>
+                                <div className="p-3 rounded-full bg-purple-100">
+                                    <DollarSign className="w-5 h-5 text-purple-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 {/* Budget Progress */}
@@ -231,14 +235,8 @@ export default function PaymentsPage() {
                     </div>
 
                     <TabsContent value={activeTab} className="space-y-4">
-                        {filteredPayments.map((payment, index) => (
-                            <motion.div
-                                key={payment.id}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                            >
-                                <Card className="hover-lift">
+                        {filteredPayments.map((payment) => (
+                            <Card key={payment.id} className="hover:shadow-lg transition-shadow">
                                     <CardContent className="p-6">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="space-y-2 flex-1">
@@ -282,7 +280,7 @@ export default function PaymentsPage() {
 
                                             <div className="flex gap-2">
                                                 {payment.status === "pending" && (
-                                                    <Button className="gradient-royal hover:glow-primary transition-all duration-300">
+                                                    <Button>
                                                         Pagar ahora
                                                     </Button>
                                                 )}
@@ -299,5 +297,6 @@ export default function PaymentsPage() {
                 </Tabs>
             </div>
         </DashboardLayout>
+        </ProtectedRoute>
     )
 }

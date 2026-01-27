@@ -1,19 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, Send, Paperclip, Smile, CheckCheck, Clock, MoreVertical, Phone, Video } from "lucide-react"
-import { useTranslation } from "@/hooks/use-translation"
+import { Search, Send, Paperclip, CheckCheck, Clock, Phone, Video } from "lucide-react"
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
-import { ChatInterface } from "@/components/chat/chat-interface"
 import { ProtectedRoute } from "@/components/auth/protected-route"
+import { mockConversations, mockMessages } from "@/data/mock-data"
 
-const mockConversations = [
+const conversations = [
   {
     id: "1",
     name: "Salón Los Arcos",
@@ -52,20 +50,12 @@ const mockConversations = [
   }
 ]
 
-const mockMessages = [
-  { id: 1, sender: "them", text: "¡Hola! Confirmamos el horario para el 15 de junio a las 4:00 PM.", time: "10:30 AM" },
-  { id: 2, sender: "me", text: "Perfecto, ¿todo listo con la disposición de mesas?", time: "10:32 AM" },
-  { id: 3, sender: "them", text: "Sí, tenemos todo preparado según el plano que nos envió.", time: "10:35 AM" },
-  { id: 4, sender: "me", text: "Excelente. ¿Pueden confirmar el número exacto de sillas?", time: "10:37 AM" },
-  { id: 5, sender: "them", text: "Tenemos 200 sillas listas. ¿Necesita más?", time: "10:40 AM" },
-]
-
 export default function MessagesPage() {
-  const { t } = useTranslation()
   const [activeChat, setActiveChat] = useState("1")
   const [message, setMessage] = useState("")
 
-  const activeConversation = mockConversations.find(c => c.id === activeChat)
+  const activeConversation = conversations.find(c => c.id === activeChat)
+  const currentMessages = mockMessages[activeChat] || []
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -90,14 +80,13 @@ export default function MessagesPage() {
                     </div>
                   </CardHeader>
                   <CardContent className="p-0 overflow-y-auto max-h-[calc(100vh-16rem)]">
-                    {mockConversations.map((convo) => (
-                      <motion.div
+                    {conversations.map((convo) => (
+                      <div
                         key={convo.id}
-                        whileHover={{ x: 4 }}
                         onClick={() => setActiveChat(convo.id)}
                         className={`
-                    p-4 border-b cursor-pointer transition-all duration-200
-                    ${activeChat === convo.id ? 'bg-gradient-to-r from-blue-50 to-cyan-50' : 'hover:bg-gray-50'}
+                    p-4 border-b cursor-pointer transition-colors
+                    ${activeChat === convo.id ? 'bg-blue-50' : 'hover:bg-gray-50'}
                   `}
                       >
                         <div className="flex items-center gap-3">
@@ -124,7 +113,7 @@ export default function MessagesPage() {
                             </Badge>
                           )}
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </CardContent>
                 </Card>
@@ -165,19 +154,14 @@ export default function MessagesPage() {
                             <Button variant="ghost" size="icon">
                               <Video className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
                           </div>
                         </div>
                       </CardHeader>
 
                       <CardContent className="flex-1 overflow-y-auto p-6 space-y-4">
-                        {mockMessages.map((msg) => (
-                          <motion.div
+                        {currentMessages.map((msg) => (
+                          <div
                             key={msg.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
                             className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}
                           >
                             <div className={`
@@ -192,7 +176,7 @@ export default function MessagesPage() {
                                 {msg.sender === 'me' && <CheckCheck className="w-3 h-3" />}
                               </div>
                             </div>
-                          </motion.div>
+                          </div>
                         ))}
                       </CardContent>
 
@@ -201,9 +185,6 @@ export default function MessagesPage() {
                           <Button variant="ghost" size="icon">
                             <Paperclip className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="icon">
-                            <Smile className="w-4 h-4" />
-                          </Button>
                           <Input
                             placeholder="Escribe un mensaje..."
                             value={message}
@@ -211,10 +192,7 @@ export default function MessagesPage() {
                             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                             className="flex-1"
                           />
-                          <Button
-                            onClick={handleSendMessage}
-                            className="gradient-royal hover:glow-primary transition-all duration-300"
-                          >
+                          <Button onClick={handleSendMessage}>
                             <Send className="w-4 h-4" />
                           </Button>
                         </div>
