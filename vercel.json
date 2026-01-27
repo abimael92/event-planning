@@ -1,9 +1,11 @@
 {
-  "buildCommand": "pnpm build",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=4096' pnpm build",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
+  "regions": [
+    "iad1"
+  ],
   "functions": {
     "app/**": {
       "maxDuration": 30
