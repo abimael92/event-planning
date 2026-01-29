@@ -3,7 +3,7 @@
   "version": "1.2.12",
   "private": true,
   "scripts": {
-    "build": "NODE_OPTIONS='--max-old-space-size=12288' next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=16384' next build",
     "build:staged": "node scripts/staged-build.js",
     "dev": "next dev -p 5050",
     "lint": "next lint",
@@ -15,7 +15,8 @@
     "test:coverage": "vitest --coverage",
     "test:run": "vitest run",
     "prebuild": "node scripts/prebuild.js",
-    "build:local": "NODE_OPTIONS='--max-old-space-size=12288' pnpm build"
+    "build:local": "NODE_OPTIONS='--max-old-space-size=16384' pnpm build",
+    "build:max": "NODE_OPTIONS='--max-old-space-size=32768' next build"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
