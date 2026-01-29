@@ -103,15 +103,15 @@
         }
     },
         "providers": {
-            "title": "Proveedores en Chihuahua",
-            "subtitle": "Encuentra los mejores proveedores para tu evento en Chihuahua. Desde música hasta decoración, todo en un solo lugar.",
+            "title": "Proveedores",
+            "subtitle": "Encuentra los mejores proveedores para tu evento. Desde música hasta decoración, todo en un solo lugar.",
             "searchPlaceholder": "Buscar proveedores por nombre, servicio o categoría...",
             "clearFilters": "Limpiar filtros",
-            "joinPrompt": "¿Eres proveedor en Chihuahua?",
+            "joinPrompt": "¿Eres proveedor?",
             "joinDescription": "Únete a nuestra plataforma y llega a más clientes para sus eventos especiales",
             "registerBusiness": "Registrar mi negocio",
             "moreInfo": "Más información",
-            "statistics": "Estadísticas de Proveedores en Chihuahua",
+            "statistics": "Estadísticas de Proveedores",
             "statisticsDescription": "Resumen de proveedores disponibles por categoría",
             "categories": {
                 "music": "Música",

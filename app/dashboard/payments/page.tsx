@@ -18,6 +18,7 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -236,7 +237,13 @@ export default function PaymentsPage() {
 
                     <TabsContent value={activeTab} className="space-y-4">
                         {filteredPayments.map((payment) => (
-                            <Card key={payment.id} className="hover:shadow-lg transition-shadow">
+                            <motion.div
+                                key={payment.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <Card className="hover:shadow-lg transition-shadow">
                                     <CardContent className="p-6">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="space-y-2 flex-1">

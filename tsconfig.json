@@ -20,14 +20,16 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"],
-			"@/core/*": ["./src/core/*"],
-			"@/shared/*": ["./app/shared/*"],
+			"@/*": ["./*"],
+			"@/app/*": ["./app/*"],
 			"@/components/*": ["./components/*"],
 			"@/hooks/*": ["./hooks/*"],
-			"@/lib/*": ["./lib/*"],
+			"@/lib/*": ["./app/shared/lib/*"],
+			"@/shared/*": ["./app/shared/*"],
+			"@/types/*": ["./app/shared/types/*"],
+			"@/data/*": ["./data/*"],
 			"@/auth/*": ["./components/auth/*"],
-			"@/data/*": ["./data/*"]
+			"@/ui/*": ["./components/ui/*"]
 		}
 	},
 	"include": [
