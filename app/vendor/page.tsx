@@ -16,10 +16,10 @@ export default function VendorPage() {
   const stats = {
     totalEvents: mockVendorEvents.length,
     confirmed: mockVendorEvents.filter(e => e.status === "confirmed").length,
-    pending: mockVendorEvents.filter(e => e.status === "pending").length,
+    pendingEvents: mockVendorEvents.filter(e => e.status === "pending").length,
     totalRevenue: mockVendorEvents.reduce((sum, e) => sum + e.revenue, 0),
     paid: mockVendorPayments.filter(p => p.status === "paid").reduce((sum, p) => sum + p.amount, 0),
-    pending: mockVendorPayments.filter(p => p.status === "pending").reduce((sum, p) => sum + p.amount, 0)
+    pendingPayments: mockVendorPayments.filter(p => p.status === "pending").reduce((sum, p) => sum + p.amount, 0)
   }
 
   return (

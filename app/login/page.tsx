@@ -35,7 +35,7 @@ export default function LoginPage() {
 
     return (
         <div className="w-full max-w-lg sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto py-8 px-4">
-            < AuthSection />
-        </div >
+            <AuthSection />
+        </div>
     )
 }
