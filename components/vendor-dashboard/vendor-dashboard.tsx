@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import {
     Calendar, DollarSign, Users, TrendingUp, CheckCircle,
     Mail, FileText, Clock, Target, Star, TrendingDown,
@@ -514,7 +513,7 @@ export function VendorDashboard() {
         <TooltipProvider>
             <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/10 p-4 sm:p-6 space-y-6 sm:space-y-8">
                 {/* Header with Actions */}
-                <motion.div
+                <div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
@@ -651,10 +650,10 @@ export function VendorDashboard() {
                             </DialogContent>
                         </Dialog>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Stats Cards */}
-                <motion.div
+                <div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.1 }}
@@ -694,7 +693,7 @@ export function VendorDashboard() {
                             trend: "up"
                         },
                     ].map((stat, index) => (
-                        <motion.div
+                        <div
                             key={index}
                             whileHover={{ y: -4, scale: 1.02 }}
                             className="relative overflow-hidden group"
@@ -727,9 +726,9 @@ export function VendorDashboard() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                        </div>
                     ))}
-                </motion.div>
+                </div>
 
                 {/* Main Content with Tabs */}
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -776,7 +775,7 @@ export function VendorDashboard() {
                                     <AnimatePresence>
                                         <div className="space-y-4">
                                             {events.slice(0, 3).map((event, index) => (
-                                                <motion.div
+                                                <div
                                                     key={event.id}
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
@@ -841,7 +840,7 @@ export function VendorDashboard() {
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </div>
-                                                </motion.div>
+                                                </div>
                                             ))}
                                         </div>
                                     </AnimatePresence>
@@ -868,7 +867,7 @@ export function VendorDashboard() {
                                     <CardContent>
                                         <div className="grid grid-cols-2 gap-3">
                                             {quickLinks.map((link, index) => (
-                                                <motion.div
+                                                <div
                                                     key={index}
                                                     whileHover={{ y: -2 }}
                                                     className="group"
@@ -890,7 +889,7 @@ export function VendorDashboard() {
                                                             </p>
                                                         </div>
                                                     </Button>
-                                                </motion.div>
+                                                </div>
                                             ))}
                                         </div>
                                     </CardContent>
@@ -1043,7 +1042,7 @@ export function VendorDashboard() {
                             <CardContent>
                                 <div className="space-y-4">
                                     {payments.map((payment) => (
-                                        <motion.div
+                                        <div
                                             key={payment.id}
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
@@ -1077,7 +1076,7 @@ export function VendorDashboard() {
                                                     View
                                                 </Button>
                                             </div>
-                                        </motion.div>
+                                        </div>
                                     ))}
                                 </div>
                             </CardContent>
@@ -1169,7 +1168,7 @@ export function VendorDashboard() {
                 {/* Notifications Panel */}
                 <AnimatePresence>
                     {unreadNotifications > 0 && (
-                        <motion.div
+                        <div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
@@ -1227,7 +1226,7 @@ export function VendorDashboard() {
                                     </Button>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                        </div>
                     )}
                 </AnimatePresence>
 

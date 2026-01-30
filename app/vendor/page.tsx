@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar, DollarSign, Users, TrendingUp, CheckCircle, Clock, AlertCircle } from "lucide-react"
 import { VendorLayout } from "@/components/layout/vendor-layout"
 import { ProtectedRoute } from "@/components/auth/protected-route"
-import { mockVendorEvents, mockVendorPayments } from "@/data/mock-data"
+import { mockVendorEvents, mockVendorPayments } from "@/data/mock-data-minimal"
 
 export default function VendorPage() {
   const [activeTab, setActiveTab] = useState("overview")

@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Calendar, Download, Eye } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -38,7 +37,7 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+    <div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
@@ -91,6 +90,6 @@ export function PaymentHistory({ payments }: PaymentHistoryProps) {
           </Table>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   )
 }

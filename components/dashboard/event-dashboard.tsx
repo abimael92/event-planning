@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -148,14 +147,14 @@ export function EventDashboard() {
 
           <div className="space-y-4">
             {upcomingEvents.map((event, index) => (
-              <motion.div
+              <div
                 key={event.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
                 <EventCard event={event} />
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

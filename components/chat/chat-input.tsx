@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Send, Paperclip, Smile, Calendar, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -72,7 +71,7 @@ export function ChatInput() {
             </PopoverContent>
           </Popover>
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               onClick={handleSend}
               disabled={!message.trim()}
@@ -80,7 +79,7 @@ export function ChatInput() {
             >
               <Send className="w-4 h-4" />
             </Button>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

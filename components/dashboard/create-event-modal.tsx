@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react"
 import { useForm, Controller } from 'react-hook-form'
-import { motion, AnimatePresence } from "framer-motion"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -133,7 +132,7 @@ export function CreateEventModal({ open, onOpenChange }: CreateEventModalProps) 
         {/* Progress bar + Step labels */}
         <div className="px-6 mt-4">
           <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-            <motion.div
+            <div
               className="h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500"
               initial={{ width: 0 }}
               animate={{ width: `${currentProgress}%` }}
@@ -158,7 +157,7 @@ export function CreateEventModal({ open, onOpenChange }: CreateEventModalProps) 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6">
           <AnimatePresence mode="wait" initial={false}>
             {!success ? (
-              <motion.div key={`form-step-${step}`} variants={stepVariants} initial="hidden" animate="enter" exit="exit">
+              <div key={`form-step-${step}`} variants={stepVariants} initial="hidden" animate="enter" exit="exit">
                 {step === 1 && (
                   <div className="space-y-4">
                     <div className="space-y-2">
@@ -334,16 +333,16 @@ export function CreateEventModal({ open, onOpenChange }: CreateEventModalProps) 
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ) : (
               // success animation
-              <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-12">
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} className="bg-green-50 rounded-full p-4">
+              <div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-12">
+                <div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} className="bg-green-50 rounded-full p-4">
                   <Check className="h-8 w-8 text-green-600" />
-                </motion.div>
+                </div>
                 <h3 className="mt-4 text-lg font-semibold">{t('events.create.success.title')}</h3>
                 <p className="text-sm text-muted-foreground mt-2">{t('events.create.success.description')}</p>
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </form>

@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Search, Send, Paperclip, CheckCheck, Clock, Phone, Video } from "lucide-react"
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
 import { ProtectedRoute } from "@/components/auth/protected-route"
-import { mockConversations, mockMessages } from "@/data/mock-data"
+import { mockConversations, mockMessages } from "@/data/mock-data-minimal"
 
 const conversations = [
   {

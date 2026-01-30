@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DollarSign } from "lucide-react"
@@ -90,7 +89,7 @@ export function ChatMessages({ conversation }: ChatMessagesProps) {
     const isUser = message.isFromUser
 
     return (
-      <motion.div
+      <div
         key={message.id}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -138,7 +137,7 @@ export function ChatMessages({ conversation }: ChatMessagesProps) {
             </span>
           </div>
         </div>
-      </motion.div>
+      </div>
     )
   }
 

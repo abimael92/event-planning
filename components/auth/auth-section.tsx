@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { LoginForm } from "./login-form"
@@ -121,14 +120,14 @@ export function AuthSection() {
             {/* ACCOUNT TYPE CARDS */}
             <div className="flex flex-col md:flex-row gap-4 w-full">
               {/* CLIENT CARD */}
-              <motion.div
+              <div
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full"
               >
                 <div className="relative group">
                   {/* GLOW EFFECT */}
-                  <motion.div
+                  <div
                     className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-20 blur-xl"
                     animate={{
                       scale: [1, 1.1, 1],
@@ -145,29 +144,29 @@ export function AuthSection() {
                     onClick={() => setCurrentView("client-register")}
                   >
                     {/* ANIMATED ICON */}
-                    <motion.div
+                    <div
                       animate={{ rotate: [0, 5, 0, -5, 0] }}
                       transition={{ duration: 4, repeat: Infinity }}
                     >
                       <User className="h-8 w-8 md:h-12 md:w-12" />
-                    </motion.div>
+                    </div>
                     <div className="text-center">
                       <div className="text-sm md:text-lg font-semibold">{t('auth.tabs.client')}</div>
                       <div className="text-xs md:text-sm text-muted-foreground">{t('auth.tabs.clientDescription')}</div>
                     </div>
                   </Button>
                 </div>
-              </motion.div>
+              </div>
 
               {/* VENDOR CARD */}
-              <motion.div
+              <div
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full"
               >
                 <div className="relative group">
                   {/* GLOW EFFECT */}
-                  <motion.div
+                  <div
                     className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-20 blur-xl"
                     animate={{
                       scale: [1, 1.1, 1],
@@ -185,23 +184,23 @@ export function AuthSection() {
                     onClick={() => setCurrentView("vendor-register")}
                   >
                     {/* ANIMATED ICON */}
-                    <motion.div
+                    <div
                       animate={{ rotate: [0, -5, 0, 5, 0] }}
                       transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
                     >
                       <Building className="h-8 w-8 md:h-12 md:w-12" />
-                    </motion.div>
+                    </div>
                     <div className="text-center">
                       <div className="text-sm md:text-lg font-semibold">{t('auth.tabs.vendor')}</div>
                       <div className="text-xs md:text-sm text-muted-foreground">{t('auth.tabs.vendorDescription')}</div>
                     </div>
                   </Button>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             {/* BACK BUTTON */}
-            <motion.div
+            <div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -213,7 +212,7 @@ export function AuthSection() {
               >
                 {t('auth.back')}
               </Button>
-            </motion.div>
+            </div>
           </div>
         )
       case "client-register":
@@ -227,7 +226,7 @@ export function AuthSection() {
         return (
           <div className="space-y-6">
             {/* WELCOME HEADER WITH ANIMATION */}
-            <motion.div
+            <div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -235,13 +234,13 @@ export function AuthSection() {
             >
               {/* ANIMATED SPARKLES */}
               <div className="relative">
-                <motion.div
+                <div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   className="absolute inset-0"
                 >
                   <Sparkles className="h-12 w-12 md:h-16 md:w-16 text-primary mx-auto opacity-30" />
-                </motion.div>
+                </div>
                 <Sparkles className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-2 relative z-10" />
               </div>
 
@@ -249,7 +248,7 @@ export function AuthSection() {
               <p className="text-sm md:text-base text-muted-foreground">{t('auth.welcomeSubtitle')}</p>
 
               {/* TIME OF DAY INDICATOR */}
-              <motion.div
+              <div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2 }}
@@ -257,13 +256,13 @@ export function AuthSection() {
               >
                 <Clock className="w-3 h-3" />
                 {timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)} Mode
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
             {/* ACTION BUTTONS */}
             <div className="space-y-3">
               {/* LOGIN BUTTON WITH GRADIENT ANIMATION */}
-              <motion.div
+              <div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="relative group"
@@ -275,10 +274,10 @@ export function AuthSection() {
                 >
                   <span className="relative z-10">{t('auth.tabs.login')}</span>
                 </Button>
-              </motion.div>
+              </div>
 
               {/* REGISTER BUTTON WITH HOVER EFFECT */}
-              <motion.div
+              <div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -291,7 +290,7 @@ export function AuthSection() {
                     {t('auth.tabs.register')}
                   </span>
                 </Button>
-              </motion.div>
+              </div>
             </div>
 
             {/* DEMO DROPDOWN */}
@@ -318,7 +317,7 @@ export function AuthSection() {
       {/* ANIMATED PARTICLES */}
       <ParticleBackground />
 
-      <motion.div
+      <div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -329,7 +328,7 @@ export function AuthSection() {
         ============================================ */}
         <div className="flex justify-between items-center mb-6">
           {/* THEME TOGGLE */}
-          <motion.button
+          <button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsDarkMode(!isDarkMode)}
@@ -341,24 +340,24 @@ export function AuthSection() {
               <Moon className="w-4 h-4" />
             )}
             <span>{isDarkMode ? ' Light ' : ' Dark '}</span>
-          </motion.button>
+          </button>
 
           {/* LANGUAGE TOGGLE */}
-          <motion.button
+          <button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={toggleLanguage}
             className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 text-white font-medium text-sm"
           >
             <Languages className="w-4 h-4" />
-            <motion.span
+            <span
               key={language}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
             >
               {language === "es" ? "ES" : "EN"}
-            </motion.span>
-          </motion.button>
+            </span>
+          </button>
         </div>
 
         {/* ============================================
@@ -366,7 +365,7 @@ export function AuthSection() {
         ============================================ */}
         <Card className={`relative backdrop-blur-xl bg-gradient-to-b ${theme.card} border-white/20 shadow-2xl w-full p-4 md:p-6 lg:p-8 transition-all duration-300`}>
           {/* ANIMATED BORDER */}
-          <motion.div
+          <div
             className="absolute inset-0 rounded-xl border-2 border-transparent"
             animate={{
               borderColor: ['#3b82f680', '#8b5cf680', '#ec489980', '#3b82f680'],
@@ -381,7 +380,7 @@ export function AuthSection() {
           <CardHeader className="text-center pb-4 relative z-10">
             {/* BACK BUTTON */}
             {currentView !== "welcome" && (
-              <motion.div
+              <div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 className="flex justify-start mb-2"
@@ -395,7 +394,7 @@ export function AuthSection() {
                   <ArrowLeft className="w-4 h-4" />
                   {t('auth.back')}
                 </Button>
-              </motion.div>
+              </div>
             )}
 
             {/* TITLE */}
@@ -424,7 +423,7 @@ export function AuthSection() {
           ============================================ */}
           <CardContent className="pt-0 pb-4 md:pb-8 relative z-10">
             <AnimatePresence mode="wait">
-              <motion.div
+              <div
                 key={currentView}
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{
@@ -452,11 +451,11 @@ export function AuthSection() {
                 {/* DECORATIVE ELEMENTS */}
                 <div className="absolute -top-4 -left-4 w-8 h-8 bg-blue-500/10 rounded-full blur-xl" />
                 <div className="absolute -bottom-4 -right-4 w-8 h-8 bg-purple-500/10 rounded-full blur-xl" />
-              </motion.div>
+              </div>
             </AnimatePresence>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   )
 }
@@ -468,7 +467,7 @@ function ParticleBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {[...Array(15)].map((_, i) => (
-        <motion.div
+        <div
           key={i}
           className="absolute rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20"
           style={{
@@ -523,7 +522,7 @@ function DemoDropdown({ theme }: { theme: any }) {
   return (
     <div className="relative">
       {/* DEMO BUTTON */}
-      <motion.div
+      <div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -533,28 +532,28 @@ function DemoDropdown({ theme }: { theme: any }) {
           className="w-full border-dashed border-2 border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-sm md:text-base group"
         >
           {/* ANIMATED SPARKLES */}
-          <motion.div
+          <div
             animate={{ rotate: 360 }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           >
             <Sparkles className="mr-2 h-4 w-4" />
-          </motion.div>
+          </div>
           {t('auth.demo.tryDemo')}
           {/* ANIMATED CHEVRON */}
-          <motion.div
+          <div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.2 }}
             className="ml-2"
           >
             <ChevronDown className="h-4 w-4" />
-          </motion.div>
+          </div>
         </Button>
-      </motion.div>
+      </div>
 
       {/* DROPDOWN MENU */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <div
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -563,7 +562,7 @@ function DemoDropdown({ theme }: { theme: any }) {
             {/* DROPDOWN CONTENT */}
             <div className="p-2 space-y-1">
               {/* CLIENT DEMO BUTTON */}
-              <motion.div
+              <div
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -575,10 +574,10 @@ function DemoDropdown({ theme }: { theme: any }) {
                   <User className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                   {t('auth.demo.client')}
                 </Button>
-              </motion.div>
+              </div>
 
               {/* VENDOR DEMO BUTTON */}
-              <motion.div
+              <div
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -590,12 +589,12 @@ function DemoDropdown({ theme }: { theme: any }) {
                   <Building className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                   {t('auth.demo.vendor')}
                 </Button>
-              </motion.div>
+              </div>
             </div>
 
             {/* DROPDOWN DECORATION */}
             <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

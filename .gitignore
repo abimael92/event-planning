@@ -32,3 +32,15 @@ yarn-error.log*
 next-env.d.ts
 
 .vscode
+
+# pnpm local store
+.pnpm-store/
+
+# internal build / audit docs (optional: remove to track these)
+BUILD_ERRORS.md
+BUILD_OPTIMIZATIONS_SUMMARY.md
+CODEBASE_AUDIT_REPORT.md
+DIAGNOSTIC_REPORT.md
+MEMORY_CRISIS_RESOLVED.md
+STABLE_BUILD_SUMMARY.md
+ULTRA_LOW_MEMORY_BUILD.md

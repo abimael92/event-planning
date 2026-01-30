@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -36,7 +35,7 @@ interface VendorCardProps {
 export function VendorCard({ vendor, viewMode, isFavorite, onToggleFavorite, onViewProfile }: VendorCardProps) {
   if (viewMode === "list") {
     return (
-      <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+      <div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
         <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
           <div className="flex">
             {/* Image */}
@@ -112,12 +111,12 @@ export function VendorCard({ vendor, viewMode, isFavorite, onToggleFavorite, onV
             </CardContent>
           </div>
         </Card>
-      </motion.div>
+      </div>
     )
   }
 
   return (
-    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
+    <div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
       <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 group">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
@@ -204,6 +203,6 @@ export function VendorCard({ vendor, viewMode, isFavorite, onToggleFavorite, onV
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   )
 }

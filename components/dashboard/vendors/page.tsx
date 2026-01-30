@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -370,7 +369,7 @@ export default function VendorsPage() {
             {/* Hero Section */}
             <div className="relative overflow-hidden rounded-xl p-6 md:p-8 animate-gradient-shift">
                 <div className="relative z-10 text-white">
-                    <motion.div
+                    <div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -381,13 +380,13 @@ export default function VendorsPage() {
                         <p className="text-white/80 text-base md:text-lg mb-6 max-w-2xl">
                             {t('providers.subtitle')}
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Background particles */}
                 <div className="absolute inset-0 overflow-hidden">
                     {[...Array(15)].map((_, i) => (
-                        <motion.div
+                        <div
                             key={i}
                             className="absolute w-1.5 h-1.5 bg-white/30 rounded-full"
                             style={{
@@ -517,7 +516,7 @@ export default function VendorsPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {filteredVendors.map((vendor, index) => (
-                            <motion.div
+                            <div
                                 key={vendor.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -681,7 +680,7 @@ export default function VendorsPage() {
                                         </div>
                                     </CardFooter>
                                 </Card>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 )}

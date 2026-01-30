@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Button } from "../ui/button"
 // import { CreateEventModal } from "../events/create-event-modal"
 import { useRouter } from "next/navigation"
@@ -60,7 +59,7 @@ export function HeroSection() {
     <>
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-transparent px-4 sm:px-6 lg:px-8">
         {/* Language Toggle Button */}
-        <motion.button
+        <button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
@@ -69,17 +68,17 @@ export function HeroSection() {
         >
           <Languages className="w-4 h-4 sm:w-6 sm:h-6 text-indigo-800" />
           <span className="text-indigo-800">{language === "es" ? "ES" : "EN"}</span>
-        </motion.button>
+        </button>
 
         <div className="container mx-auto text-center relative z-10 w-full">
-          <motion.div
+          <div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto"
           >
             {/* Logo/Brand */}
-            <motion.div
+            <div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
@@ -101,10 +100,10 @@ export function HeroSection() {
               <div className="flex items-center justify-center gap-2 mt-6 sm:mt-8 lg:mt-10">
                 <p className="text-xl sm:text-2xl lg:text-3xl font-cinzel text-purple-800 font-medium">{t.eventPlanning}</p>
               </div>
-            </motion.div>
+            </div>
 
             {/* Hero Text */}
-            <motion.div
+            <div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
@@ -126,10 +125,10 @@ export function HeroSection() {
               <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-purple-800 text-balance max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
                 {t.heroDescription}
               </p>
-            </motion.div>
+            </div>
 
             {/* CTA Buttons */}
-            <motion.div
+            <div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
@@ -143,17 +142,17 @@ export function HeroSection() {
                 {t.startPlanning}
                 <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </motion.div>
+            </div>
 
             {/* Features Preview */}
-            <motion.div
+            <div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto px-2 sm:px-4 "
             >
               {t.features.map((feature, index) => (
-                <motion.div
+                <div
                   key={feature.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -177,10 +176,10 @@ export function HeroSection() {
                   <p className="text-base text-sky-950 sm:text-lg group-hover:text-sky-900 transition-colors duration-300">
                     {feature.desc}
                   </p>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section >
 

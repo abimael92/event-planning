@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { DollarSign, Clock, CheckCircle, AlertCircle, MoreVertical } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -53,7 +52,7 @@ export function PaymentCard({ payment, index }: PaymentCardProps) {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
+    <div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
@@ -125,6 +124,6 @@ export function PaymentCard({ payment, index }: PaymentCardProps) {
           )}
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   )
 }

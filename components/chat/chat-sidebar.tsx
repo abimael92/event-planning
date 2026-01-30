@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from '../../app/shared/lib/utils'
@@ -27,7 +26,7 @@ export function ChatSidebar({ conversations, selectedConversation, onSelectConve
   return (
     <div className="flex-1 overflow-y-auto">
       {conversations.map((conversation, index) => (
-        <motion.div
+        <div
           key={conversation.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -68,7 +67,7 @@ export function ChatSidebar({ conversations, selectedConversation, onSelectConve
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   )

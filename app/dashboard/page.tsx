@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress"
 import { Calendar, Clock, MapPin, Users, DollarSign, Plus, ChevronRight } from "lucide-react"
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
 import { ProtectedRoute } from "@/components/auth/protected-route"
-import { mockEvents } from "@/data/mock-data"
+import { mockEvents } from "@/data/mock-data-minimal"
 import { useRouter } from "next/navigation"
 
 export default function DashboardPage() {

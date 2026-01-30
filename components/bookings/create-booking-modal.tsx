@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { motion, AnimatePresence } from "framer-motion"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -145,7 +144,7 @@ export function CreateBookingModal({ open, onOpenChange }: CreateBookingModalPro
         <form onSubmit={handleSubmit(onSubmit)}>
           <AnimatePresence mode="wait">
             {step === 1 && (
-              <motion.div
+              <div
                 key="step1"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -214,11 +213,11 @@ export function CreateBookingModal({ open, onOpenChange }: CreateBookingModalPro
                     </PopoverContent>
                   </Popover>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {step === 2 && (
-              <motion.div
+              <div
                 key="step2"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -266,11 +265,11 @@ export function CreateBookingModal({ open, onOpenChange }: CreateBookingModalPro
                   </div>
                   {errors.budget && <p className="text-sm text-destructive">{errors.budget.message}</p>}
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {step === 3 && (
-              <motion.div
+              <div
                 key="step3"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -301,11 +300,11 @@ export function CreateBookingModal({ open, onOpenChange }: CreateBookingModalPro
                     </SelectContent>
                   </Select>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {step === 4 && (
-              <motion.div
+              <div
                 key="step4"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -343,7 +342,7 @@ export function CreateBookingModal({ open, onOpenChange }: CreateBookingModalPro
                     <li>• Once approved, you can sign the contract and make payment</li>
                   </ul>
                 </div>
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
 

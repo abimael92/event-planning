@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -312,7 +311,7 @@ export function VendorProfileModal({
                   <h3 className="text-xl font-heading font-semibold">Portfolio</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {vendor.portfolio.map((image, index) => (
-                      <motion.div
+                      <div
                         key={index}
                         whileHover={{ scale: 1.05 }}
                         className="relative aspect-square rounded-lg overflow-hidden cursor-pointer"
@@ -323,7 +322,7 @@ export function VendorProfileModal({
                           alt={`Portfolio ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </div>

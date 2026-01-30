@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -29,7 +28,7 @@ import {
 import { CreateEventModal } from "./create-event-modal"
 import { GuestList } from "./guest-list"
 import { useTranslation } from "@/hooks/use-translation"
-import { mockGuestData } from "@/data/mock-data"
+import { mockGuestData } from "@/data/mock-data-minimal"
 import { useRouter } from "next/navigation"
 
 // Event icons mapping
@@ -243,7 +242,7 @@ export function EnhancedEventDashboard() {
       </div>
 
       {/* Hero Section - Responsive */}
-      <motion.div
+      <div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -255,7 +254,7 @@ export function EnhancedEventDashboard() {
         {/* Floating elements */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(12)].map((_, i) => (
-            <motion.div
+            <div
               key={i}
               className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/30 rounded-full"
               style={{
@@ -278,7 +277,7 @@ export function EnhancedEventDashboard() {
         </div>
 
         <div className="relative z-10 text-white">
-          <motion.div
+          <div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -291,7 +290,7 @@ export function EnhancedEventDashboard() {
                 </h1>
               </div>
               <div className="hidden sm:block">
-                <motion.div
+                <div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -302,7 +301,7 @@ export function EnhancedEventDashboard() {
                     <Plus className="w-4 h-4 mr-2" />
                     <span className="font-semibold text-sm sm:text-base">{t('dashboard.events.createEvent')}</span>
                   </Button>
-                </motion.div>
+                </div>
               </div>
             </div>
 
@@ -310,13 +309,13 @@ export function EnhancedEventDashboard() {
             <div className="space-y-4">
 
               {/* The Card Itself */}
-              <motion.div
+              <div
                 className={`${glassEffectIntense} rounded-lg border-2 sm:rounded-xl p-3 sm:p-4 md:p-6 w-full shadow-lg hover:shadow-xl transition-all duration-300`}
                 whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <div
                     key={sortedEvents[currentEventIndex].id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -359,7 +358,7 @@ export function EnhancedEventDashboard() {
                             </div>
                           </div>
 
-                          <motion.div
+                          <div
                             className="flex items-center gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mt-2 sm:mt-0 w-fit"
                             animate={pulseVariants.pulse}
                             style={{ background: sortedEvents[currentEventIndex].cover }}
@@ -373,7 +372,7 @@ export function EnhancedEventDashboard() {
                               </div>
                               <p className="text-xs">{t('dashboard.events.daysLeft')}</p>
                             </div>
-                          </motion.div>
+                          </div>
                         </div>
 
                         <div className="mt-3 sm:mt-4">
@@ -382,7 +381,7 @@ export function EnhancedEventDashboard() {
                             <span className="font-semibold">{sortedEvents[currentEventIndex].progress}%</span>
                           </div>
                           <div className="h-1.5 sm:h-2 bg-white/20 rounded-full overflow-hidden">
-                            <motion.div
+                            <div
                               className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"
                               initial={{ width: 0 }}
                               animate={{ width: `${sortedEvents[currentEventIndex].progress}%` }}
@@ -392,9 +391,9 @@ export function EnhancedEventDashboard() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </AnimatePresence>
-              </motion.div>
+              </div>
 
               {/* Carousel Navigation */}
               <div className="flex justify-between items-center">
@@ -428,12 +427,12 @@ export function EnhancedEventDashboard() {
                   </div>
                 </div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Mobile Create Event Button */}
-      <motion.div
+      <div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
@@ -446,10 +445,10 @@ export function EnhancedEventDashboard() {
           <Plus className="w-4 h-4 mr-2" />
           <span className="font-semibold">{t('dashboard.events.createEvent')}</span>
         </Button>
-      </motion.div>
+      </div>
 
       {/* Action Buttons with enhanced effects - Responsive */}
-      <motion.div
+      <div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
@@ -501,10 +500,10 @@ export function EnhancedEventDashboard() {
             </MotionButton>
           )
         })}
-      </motion.div>
+      </div>
 
       {/* Upcoming Events Section - Responsive */}
-      <motion.div
+      <div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.5 }}
@@ -529,7 +528,7 @@ export function EnhancedEventDashboard() {
               const guestConfirmationRate = calculateGuestConfirmationRate(event.id)
 
               return (
-                <motion.div
+                <div
                   key={event.id}
                   layout
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -578,7 +577,7 @@ export function EnhancedEventDashboard() {
                           </div>
 
                           {/* Days left indicator */}
-                          <motion.div
+                          <div
                             className="text-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg shadow-sm flex-shrink-0"
                             style={{
                               backgroundColor: `${event.accentColor}15`,
@@ -589,7 +588,7 @@ export function EnhancedEventDashboard() {
                           >
                             <p className="text-lg sm:text-xl font-bold">{event.daysLeft}</p>
                             <p className="text-xs font-medium">días</p>
-                          </motion.div>
+                          </div>
                         </div>
 
                         {/* Mobile location */}
@@ -623,7 +622,7 @@ export function EnhancedEventDashboard() {
                               bgColor: '#d5fff0'
                             },
                           ].map((stat, i) => (
-                            <motion.div
+                            <div
                               key={i}
                               className="text-center p-2 sm:p-3 rounded-lg sm:rounded-xl backdrop-blur-sm border border-gray-100/50"
                               style={{ backgroundColor: stat.bgColor }}
@@ -634,7 +633,7 @@ export function EnhancedEventDashboard() {
                                 <p className="text-base sm:text-lg font-bold" style={{ color: stat.color }}>{stat.value}</p>
                               </div>
                               <p className="text-xs text-muted-foreground">{stat.label}</p>
-                            </motion.div>
+                            </div>
                           ))}
                         </div>
 
@@ -650,7 +649,7 @@ export function EnhancedEventDashboard() {
                               <span className="font-semibold">{event.progress}%</span>
                             </div>
                             <div className="h-1.5 sm:h-2 bg-gray-200/50 rounded-full overflow-hidden">
-                              <motion.div
+                              <div
                                 className="h-full rounded-full"
                                 style={{ background: event.cover }}
                                 initial={{ width: 0 }}
@@ -670,7 +669,7 @@ export function EnhancedEventDashboard() {
                               <span className="font-semibold">{guestConfirmationRate}%</span>
                             </div>
                             <div className="h-1.5 sm:h-2 bg-gray-200/50 rounded-full overflow-hidden">
-                              <motion.div
+                              <div
                                 className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
                                 initial={{ width: 0 }}
                                 animate={{ width: `${guestConfirmationRate}%` }}
@@ -681,7 +680,7 @@ export function EnhancedEventDashboard() {
                         </div>
 
                         {/* Action button */}
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                           <Button
                             size="sm"
                             variant="outline"
@@ -692,19 +691,19 @@ export function EnhancedEventDashboard() {
                             <span className="font-semibold text-xs sm:text-sm">{t('dashboard.events.guestList')}</span>
                             <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-auto" />
                           </Button>
-                        </motion.div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               )
             })}
           </AnimatePresence>
         </div>
-      </motion.div>
+      </div>
 
       {/* Budget Overview - Responsive */}
-      <motion.div
+      <div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.7 }}
@@ -751,7 +750,7 @@ export function EnhancedEventDashboard() {
                     borderColor: "border-purple-200",
                   },
                 ].map((stat, index) => (
-                  <motion.div
+                  <div
                     key={index}
                     className={`relative p-3 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl shadow-sm border ${stat.borderColor} overflow-hidden group`}
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -785,7 +784,7 @@ export function EnhancedEventDashboard() {
                       <p className="text-lg sm:text-xl md:text-2xl font-bold mb-1">{stat.value}</p>
                       <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
@@ -798,7 +797,7 @@ export function EnhancedEventDashboard() {
                 {sortedEvents.map((event, index) => {
                   const spentPercentage = (event.spent / event.budget) * 100
                   return (
-                    <motion.div
+                    <div
                       key={event.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -817,7 +816,7 @@ export function EnhancedEventDashboard() {
                           </span>
                         </div>
                         <div className="h-1.5 sm:h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <motion.div
+                          <div
                             className="h-full rounded-full"
                             style={{ background: event.cover }}
                             initial={{ width: 0 }}
@@ -826,14 +825,14 @@ export function EnhancedEventDashboard() {
                           />
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   )
                 })}
               </div>
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
       <CreateEventModal open={showCreateModal} onOpenChange={setShowCreateModal} />
     </div>

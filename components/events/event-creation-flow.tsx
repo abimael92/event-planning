@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -96,7 +95,7 @@ export function EventCreationFlow() {
           <CardContent className="space-y-6">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
-                <motion.div
+                <div
                   key="step1"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -134,11 +133,11 @@ export function EventCreationFlow() {
                       </SelectContent>
                     </Select>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {currentStep === 2 && (
-                <motion.div
+                <div
                   key="step2"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -178,11 +177,11 @@ export function EventCreationFlow() {
                       />
                     </div>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {currentStep === 3 && (
-                <motion.div
+                <div
                   key="step3"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -205,11 +204,11 @@ export function EventCreationFlow() {
                       />
                     </div>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {currentStep === 4 && (
-                <motion.div
+                <div
                   key="step4"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -257,7 +256,7 @@ export function EventCreationFlow() {
                       </SelectContent>
                     </Select>
                   </div>
-                </motion.div>
+                </div>
               )}
             </AnimatePresence>
           </CardContent>

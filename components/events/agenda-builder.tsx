@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion, Reorder } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -118,7 +117,7 @@ export function AgendaBuilder() {
                   const IconComponent = activityIcons[item.type as keyof typeof activityIcons]
                   return (
                     <Reorder.Item key={item.id} value={item}>
-                      <motion.div
+                      <div
                         whileHover={{ scale: 1.02 }}
                         whileDrag={{ scale: 1.05 }}
                         className="flex items-center gap-4 p-4 bg-gradient-to-r from-white to-gray-50 rounded-xl border-2 border-gray-100 hover:border-primary/30 transition-all duration-300 cursor-grab active:cursor-grabbing"
@@ -137,7 +136,7 @@ export function AgendaBuilder() {
                         <div className="text-right">
                           <p className="font-semibold text-primary">{item.time}</p>
                         </div>
-                      </motion.div>
+                      </div>
                     </Reorder.Item>
                   )
                 })}

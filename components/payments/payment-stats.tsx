@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { DollarSign, TrendingUp, Clock, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -53,7 +52,7 @@ export function PaymentStats({ totalPaid, totalPending, totalOverdue }: PaymentS
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat, index) => (
-        <motion.div
+        <div
           key={stat.title}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,7 +73,7 @@ export function PaymentStats({ totalPaid, totalPending, totalOverdue }: PaymentS
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       ))}
     </div>
   )

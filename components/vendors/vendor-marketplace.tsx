@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -215,7 +214,7 @@ export function VendorMarketplace() {
 
         {/* Advanced Filters */}
         {showFilters && (
-          <motion.div
+          <div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -225,7 +224,7 @@ export function VendorMarketplace() {
               setPriceRange={setPriceRange}
               onClose={() => setShowFilters(false)}
             />
-          </motion.div>
+          </div>
         )}
       </div>
 
@@ -289,7 +288,7 @@ export function VendorMarketplace() {
       {/* Vendor Grid/List */}
       <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
         {filteredVendors.map((vendor, index) => (
-          <motion.div
+          <div
             key={vendor.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -302,7 +301,7 @@ export function VendorMarketplace() {
               onToggleFavorite={() => toggleFavorite(vendor.id)}
               onViewProfile={() => setSelectedVendor(vendor)}
             />
-          </motion.div>
+          </div>
         ))}
       </div>
 

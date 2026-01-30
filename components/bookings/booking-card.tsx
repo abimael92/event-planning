@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -62,7 +61,7 @@ export function BookingCard({ booking, onViewDetails }: BookingCardProps) {
   const paymentProgress = ((booking.amount - booking.remaining) / booking.amount) * 100
 
   return (
-    <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+    <div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
       <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
         <div className="flex">
           {/* Vendor Image */}
@@ -183,6 +182,6 @@ export function BookingCard({ booking, onViewDetails }: BookingCardProps) {
           </CardContent>
         </div>
       </Card>
-    </motion.div>
+    </div>
   )
 }

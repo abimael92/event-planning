@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Shield, Clock, CheckCircle, AlertTriangle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -55,7 +54,7 @@ export function EscrowStatus({ payments }: EscrowStatusProps) {
   return (
     <div className="space-y-6">
       {/* Escrow Overview */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -83,10 +82,10 @@ export function EscrowStatus({ payments }: EscrowStatusProps) {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
       {/* Escrow Timeline */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+      <div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <Card>
           <CardHeader>
             <CardTitle>Escrow Timeline</CardTitle>
@@ -116,7 +115,7 @@ export function EscrowStatus({ payments }: EscrowStatusProps) {
             ))}
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   )
 }

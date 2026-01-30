@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar, CheckCircle, Clock, DollarSign, Users } from "lucide-react"
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
 import { ProtectedRoute } from "@/components/auth/protected-route"
-import { mockBookings } from "@/data/mock-data"
+import { mockBookings } from "@/data/mock-data-minimal"
 
 const bookings = mockBookings
 

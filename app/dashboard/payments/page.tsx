@@ -18,7 +18,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -27,7 +26,7 @@ import { Progress } from "@/components/ui/progress"
 import { DollarSign, CreditCard, Calendar, CheckCircle, Clock, AlertCircle, Download, Filter } from "lucide-react"
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
 import { ProtectedRoute } from "@/components/auth/protected-route"
-import { mockPayments } from "@/data/mock-data"
+import { mockPayments } from "@/data/mock-data-minimal"
 
 const payments = [
     {
@@ -237,13 +236,8 @@ export default function PaymentsPage() {
 
                     <TabsContent value={activeTab} className="space-y-4">
                         {filteredPayments.map((payment) => (
-                            <motion.div
-                                key={payment.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <Card className="hover:shadow-lg transition-shadow">
+                            <div key={payment.id}>
+                                <Card className="hover:shadow-lg transition-shadow animate-in fade-in-50 slide-in-from-bottom-3 duration-300">
                                     <CardContent className="p-6">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                             <div className="space-y-2 flex-1">
@@ -298,7 +292,7 @@ export default function PaymentsPage() {
                                         </div>
                                     </CardContent>
                                 </Card>
-                            </motion.div>
+                            </div>
                         ))}
                     </TabsContent>
                 </Tabs>

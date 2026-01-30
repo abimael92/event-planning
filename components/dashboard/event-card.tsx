@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -36,7 +35,7 @@ export function EventCard({ event }: EventCardProps) {
   const budgetPercentage = (event.spent / event.budget) * 100
 
   return (
-    <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+    <div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
       <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
         <div className="flex">
           {/* Event Image */}
@@ -133,6 +132,6 @@ export function EventCard({ event }: EventCardProps) {
           </CardContent>
         </div>
       </Card>
-    </motion.div>
+    </div>
   )
 }

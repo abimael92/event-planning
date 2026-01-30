@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -195,7 +194,7 @@ export function ChecklistTasks() {
             const isOverdue = new Date() > task.dueDate && !task.completed
 
             return (
-              <motion.div
+              <div
                 key={task.id}
                 layout
                 initial={{ opacity: 0, y: 20 }}
@@ -264,7 +263,7 @@ export function ChecklistTasks() {
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             )
           })}
         </AnimatePresence>
